@@ -8,7 +8,7 @@ public class WordSpawner : MonoBehaviour {
 	public GameObject letterPrefab;
 	public WordManager wordManager;
 
-	private LevelManager levelManager;
+	private GameManager gameManager;
 
 	// Level constants
 	private int wordCount = 0;
@@ -28,8 +28,8 @@ public class WordSpawner : MonoBehaviour {
 
 	private void Start()
     {
-		levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-		if (levelManager == null) Debug.Log("ERROR");
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		if (gameManager == null) Debug.Log("ERROR");
 
 		GetLevelConfig();
 
@@ -86,7 +86,7 @@ public class WordSpawner : MonoBehaviour {
 	void GetLevelConfig()
 	{
 
-		levelManager.GetLevelConfig(
+		gameManager.GetLevelConfig(
 			out wordCount,
 			out wordDelay,
 			out canDropWord,

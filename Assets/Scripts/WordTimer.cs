@@ -6,7 +6,7 @@ public class WordTimer : MonoBehaviour {
 
 	public WordManager wordManager;
 
-	private LevelManager levelManager;
+	private GameManager gameManager;
 
 	// Level constants
 	private int wordCount = 0;
@@ -27,8 +27,8 @@ public class WordTimer : MonoBehaviour {
 
 	private void Start()
     {
-        levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-		if (levelManager == null) Debug.Log("ERROR");
+		gameManager = GameObject.Find("LevelManager").GetComponent<GameManager>();
+		if (gameManager == null) Debug.Log("ERROR");
 
 		if (wordManager == null) Debug.Log("ERROR: Word Manager NULL");
 
@@ -87,7 +87,7 @@ public class WordTimer : MonoBehaviour {
 	void GetLevelConfig()
     {
 
-		levelManager.GetLevelConfig(
+		gameManager.GetLevelConfig(
 			out wordCount,
 			out wordDelay,
 			out canDropWord,

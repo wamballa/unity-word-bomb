@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class LevelManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
 
     public int levelNumber = 0;
