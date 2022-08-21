@@ -33,6 +33,9 @@ public class WordSpawner : MonoBehaviour {
 
 		GetLevelConfig();
 
+		canDropWord = true;
+		nextWordTime = 1f;
+
 	}
 
     private void Update()
