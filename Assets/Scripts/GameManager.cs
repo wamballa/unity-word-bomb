@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 {
 
     public int levelNumber = 0;
-    public int score;
-    public int lives = 3;
+    private int score;
+    private int lives = 100;
     [SerializeField] private TMP_Text levelText;
 
     // Bools

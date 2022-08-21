@@ -87,12 +87,12 @@ public class WordManager : MonoBehaviour
         }
         // WORD
         // Destroy word just typed and check if last word/letter
-        if (hasActiveWord && activeWord.GetComponent<Word>().WordTyped())
+        if (hasActiveWord && activeWord.GetComponent<Word>().HasWordBeenTyped())
         {
             hasActiveWord = false;
-            Destroy(activeWord);
-            //words.Remove(activeWord);
-            gameManager.SetScore(+1);
+            //Destroy(activeWord);
+            ////words.Remove(activeWord);
+            //gameManager.SetScore(+1);
             //CheckIfAllDropped();
         }
 
@@ -148,6 +148,16 @@ public class WordManager : MonoBehaviour
             }
             if (w.HasCrashed())
             {
+                Destroy(words[i]);
+                words.RemoveAt(i);
+                hasActiveWord = false;
+                CheckIfAllDropped();
+                DecreaseLives();
+                ShowLives();
+            }
+            if (w.HasWordBeenTyped())
+            {
+                gameManager.SetScore(+1);
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;

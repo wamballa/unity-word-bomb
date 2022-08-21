@@ -15,35 +15,43 @@ public class Word : MonoBehaviour {
     private float fallSpeed = 1f;
     bool isOffScreen;
     bool hasCrashed;
+    bool hasBeenTyped;
 
     public CollisionHandler collisionHandler;
 
     private void Start()
     {
         _word = WordGenerator.GetRandomWord();
+        transform.name = _word;
         SetText();
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
-        CheckIsGrounded();
+        CheckIfCrashed();
+        //CheckIfTyped();
     }
     void HandleMovement()
     {
         transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
     }
-    void CheckIsGrounded()
+    //void CheckIfTyped()
+    //{
+    //    if (_word.Length == 0)
+    //    {
+    //        print( transform.name + "Word has been typed");
+    //        hasBeenTyped = true;
+    //    }
+    //}
+    void CheckIfCrashed()
     {
         hasCrashed = collisionHandler.HasCrashed();
     }
-    public bool WordTyped()
+
+    public bool HasWordBeenTyped()
     {
         bool wordTyped = (typeIndex >= _word.Length);
-        if (wordTyped)
-        {
-            //display.RemoveWord();
-        }
         return wordTyped;
     }
 
@@ -74,6 +82,10 @@ public class Word : MonoBehaviour {
     {
         return hasCrashed;
     }
+    //public bool HasBeenTyped()
+    //{
+    //    return hasBeenTyped;
+    //}
     public string GetWord()
     {
         return _word;

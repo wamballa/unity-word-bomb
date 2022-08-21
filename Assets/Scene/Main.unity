@@ -596,8 +596,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelNumber: 0
-  score: 0
-  lives: 3
   levelText: {fileID: 290224015}
 --- !u!4 &364730491
 Transform:
@@ -1294,7 +1292,6 @@ GameObject:
   - component: {fileID: 1506127306}
   - component: {fileID: 1506127308}
   - component: {fileID: 1506127309}
-  - component: {fileID: 1506127310}
   m_Layer: 0
   m_Name: WordManager
   m_TagString: Untagged
@@ -1364,19 +1361,6 @@ MonoBehaviour:
     type: 3}
   letterPrefab: {fileID: 2238391570214539167, guid: 8dc77975e381843d691790c124d5b6b0,
     type: 3}
-  wordManager: {fileID: 1506127306}
---- !u!114 &1506127310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1506127305}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e709038c6023b804f90c9f0cac031974, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   wordManager: {fileID: 1506127306}
 --- !u!1 &1510969956
 GameObject:

@@ -23,7 +23,7 @@ public class WordSpawner : MonoBehaviour {
 	bool canDropLetterBomb = false;
 	private int _wordCounter = 0;
 	private int _letterCounter = 0;
-	private bool lastWordDropped = false;
+	//private bool lastWordDropped = false;
 	private bool lastLetterDropped = false;
 
 	private void Start()
@@ -31,37 +31,28 @@ public class WordSpawner : MonoBehaviour {
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		if (gameManager == null) Debug.Log("ERROR");
 
-		GetLevelConfig();
+		//GetLevelConfig();
 
 		canDropWord = true;
-		nextWordTime = 1f;
-
+		wordDelay = 1f;
 	}
 
     private void Update()
     {
-		CheckIfSpawnWord();
+		SpawnWord();
 
 	}
 
-	private void CheckIfSpawnWord()
+	private void SpawnWord()
 	{
 		if (!canDropWord) return;
 
-		if (lastWordDropped) return;
-
 		if (Time.time >= nextWordTime )
 		{
-			Debug.Log("DROP WORD");
+			//Debug.Log("DROP WORD");
 			wordManager.AddWord(GetWord());
 			nextWordTime = Time.time + wordDelay;
 			_wordCounter++;
-			//wordDelay *= .99f;
-			if (_wordCounter == wordCount)
-			{
-				lastWordDropped = true;
-				Debug.Log("LAST WORD DROPPED ");
-			}
 		}
 	}
 
@@ -72,31 +63,11 @@ public class WordSpawner : MonoBehaviour {
         return wordObj;
     }
 
-    //public Word GetWord()
-    //{
-    //	Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), 7f);
-    //	Word wordObj = new Word();
-    //       return wordObj;
-    //}
-
     public GameObject SpawnLetter()
 	{
 		Vector3 randomPosition = new Vector3(Random.Range(-6f, 6f), 7f);
 		GameObject letterObj = Instantiate(letterPrefab, randomPosition, Quaternion.identity);
 		return letterObj;
 	}
-
-	void GetLevelConfig()
-	{
-
-		gameManager.GetLevelConfig(
-			out wordCount,
-			out wordDelay,
-			out canDropWord,
-			out letterCount,
-			out letterDelay,
-			out canDropLetterBomb);
-	}
-
 
 }
