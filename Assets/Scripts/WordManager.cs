@@ -74,13 +74,23 @@ public class WordManager : MonoBehaviour
         // OF ANY WORD - THEN SET THAT WORD AS ACTIVE WORD
         else
         {
-            foreach (GameObject word in words)
+            //foreach (GameObject word in words)
+            //{
+            //    if (word.GetComponent<Word>().GetNextLetter() == letter)
+            //    {
+            //        activeWord = word;
+            //        hasActiveWord = true;
+            //        word.GetComponent<Word>().RemoveLetter();
+            //        break;
+            //    }
+            //}
+            for (int i = 0; i < words.Count; i++)
             {
-                if (word.GetComponent<Word>().GetNextLetter() == letter)
+                if (words[i].GetComponent<Word>().GetNextLetter() == letter)
                 {
-                    activeWord = word;
+                    activeWord = words[i];
                     hasActiveWord = true;
-                    word.GetComponent<Word>().RemoveLetter();
+                    words[i].GetComponent<Word>().RemoveLetter();
                     break;
                 }
             }
@@ -148,12 +158,14 @@ public class WordManager : MonoBehaviour
             }
             if (w.HasCrashed())
             {
+                //w.HandleExplosion();
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;
                 CheckIfAllDropped();
                 DecreaseLives();
                 ShowLives();
+
             }
             if (w.HasWordBeenTyped())
             {

@@ -14,10 +14,14 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //print(">>>>>>>Collide");
         if (collision.transform.CompareTag("Ground"))
         {
-            //print("Word Crashed Into Ground");
+            print(transform.name + "Collided with GROUND");
+            hasCrashed = true;
+        }
+        if (collision.transform.CompareTag("Letter"))
+        {
+            print("Collided with LETTER");
             hasCrashed = true;
         }
     }
