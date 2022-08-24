@@ -5,23 +5,51 @@ using TMPro;
 
 public class Letter : MonoBehaviour
 {
-    //public WordManager wordManager;
-
     private string letter;
     private int typeIndex;
     public TMP_Text text;
+    float CHAR_WIDTH = 0.5f;
 
+    // Collision
+    bool hasCrashed;
+    public LetterCollisionHandler letterCollisionHandler;
+    float fallSpeed = 1f;
+    Vector2 crashPos;
+    public GameObject explodingLetterPF;
 
-    float fallSpeed = 2f;
-    bool isOffScreen;
 
     // Start is called before the first frame update
     void Start()
     {
+        letterCollisionHandler = transform.GetComponentInChildren<LetterCollisionHandler>();
+        if (letterCollisionHandler == null) print("ERROR; no collision handler found");
+
         letter = LetterGenerator.GetRandomLetter();
+        transform.name = letter;
+
+        SetXPosition();
         SetLetter();
     }
 
+    private void FixedUpdate()
+    {
+        HandleMovement();
+        CheckIfCrashed();
+        HandleExplosion();
+    }
+    void SetXPosition()
+    {
+        float halfLength = (1 * CHAR_WIDTH) / 2;
+
+        Vector2 leftPoint = new Vector2(0, 0);
+        Vector2 rightPoint = new Vector2(1, 0);
+        Vector2 leftEdge = Camera.main.ViewportToWorldPoint(leftPoint);
+        Vector2 rightEdge = Camera.main.ViewportToWorldPoint(rightPoint);
+        float leftRange = leftEdge.x + halfLength;
+        float rightRange = rightEdge.x - halfLength;
+        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 7f);
+        transform.position = randomPosition;
+    }
     private void SetLetter()
     {
         text.text = letter;
@@ -31,20 +59,30 @@ public class Letter : MonoBehaviour
     {
         return letter[0];
     }
-
-    private void FixedUpdate()
+    void HandleExplosion()
     {
-        transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
+        if (!hasCrashed) return;
+        print("Leter Crash "+letter);
 
-        if (transform.position.y < -4f)
-        {
-            isOffScreen = true;
-        }
+        GameObject go = Instantiate(explodingLetterPF, crashPos, Quaternion.identity);
+        go.GetComponentInChildren<TMP_Text>().text = letter.ToString();
+        go.GetComponentInChildren<TMP_Text>().color = Color.green;
+
     }
-
-    public bool IsOffScreen()
+    void HandleMovement()
     {
-        return isOffScreen;
+        if (hasCrashed) return;
+        transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
+    }
+    void CheckIfCrashed()
+    {
+        if (hasCrashed) return;
+        hasCrashed = letterCollisionHandler.HasCrashed();
+        crashPos = transform.position;
+    }
+    public bool HasCrashed()
+    {
+        return hasCrashed;
     }
 
 }

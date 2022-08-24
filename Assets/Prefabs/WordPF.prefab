@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8080767892931351380}
   m_Layer: 0
   m_Name: WordPF
-  m_TagString: Untagged
+  m_TagString: Word
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1807318242682320896}
-  explodingPF: {fileID: 4755563703907005480, guid: 0940422c46d598b499d72dc2f1d763ce,
+  collisionHandler: {fileID: 550559852680156255}
+  explodingPF: {fileID: 4755563703907005480, guid: 00f4e223e0f243040af64df86cba546c,
     type: 3}
   crashPos: {x: 0, y: 0}
-  collisionHandler: {fileID: 550559852680156255}
 --- !u!1 &7576151683130828029
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 550559852680156255}
   m_Layer: 0
   m_Name: Text
-  m_TagString: Untagged
+  m_TagString: Word
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

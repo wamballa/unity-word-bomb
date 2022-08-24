@@ -19,9 +19,9 @@ public class CollisionHandler : MonoBehaviour
             print(transform.name + "Collided with GROUND");
             hasCrashed = true;
         }
-        if (collision.transform.CompareTag("Letter"))
+        if (collision.transform.CompareTag("ExplodedLetter"))
         {
-            print("Collided with LETTER");
+            //print("Collided with LETTER");
             hasCrashed = true;
         }
     }

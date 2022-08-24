@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
 {
 
     public int levelNumber = 0;
-    private int score;
+    public int score;
     private int lives = 100;
     [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private TMP_Text livesText;
 
     // Bools
     bool isGameOver = false;
@@ -45,12 +47,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateLevelText();
+        UpdateUI();
         CheckLives();
+        CheckIfFull();
     }
-    private void UpdateLevelText()
+    void CheckIfFull()
+    {
+        /////////////////////////////////////////////////////////////////////
+    }
+    private void UpdateUI()
     {
         levelText.text = levelNumber.ToString();
+        scoreText.text = score.ToString();
+        livesText.text = lives.ToString();
     }
     void CheckLives()
     {

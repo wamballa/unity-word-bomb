@@ -6,36 +6,38 @@ using TMPro;
 
 public class Word : MonoBehaviour {
 
-    //public WordManager wordManager;
-
+    // WORD STUFF
     private string _word;
     private int typeIndex;
     public TMP_Text text;
-
-    // Explosion stuff
+    public CollisionHandler collisionHandler;
     public GameObject explodingPF;
     public Vector2 crashPos;
-
     private float fallSpeed = 1f;
     bool isOffScreen;
     bool hasCrashed;
     bool hasBeenTyped;
-
-    public CollisionHandler collisionHandler;
-
     float boxColliderWidth;
     float CHAR_WIDTH = 0.5f;
     float FORCE = 2f;
+
+    // LETTER STUFF
+    private string _char;
+
 
     private void Start()
     {
         _word = WordGenerator.GetRandomWord();
         transform.name = _word;
 
+        _char = LetterGenerator.GetRandomLetter();
+
+
         BoxCollider2D bc = transform.GetComponentInChildren<BoxCollider2D>();
 
         bc.size = new Vector2(_word.Length * CHAR_WIDTH, bc.size.y);
 
+        SetXPosition();
         SetText();
     }
 
@@ -44,6 +46,24 @@ public class Word : MonoBehaviour {
         HandleMovement();
         CheckIfCrashed();
         HandleExplosion();
+    }
+    void SetXPosition()
+    {
+        float halfLength = (_word.Length * CHAR_WIDTH)/2;
+
+        Vector2 leftPoint = new Vector2(0, 0);
+        Vector2 rightPoint = new Vector2(1, 0);
+        Vector2 leftEdge = Camera.main.ViewportToWorldPoint(leftPoint);
+        Vector2 rightEdge = Camera.main.ViewportToWorldPoint(rightPoint);
+
+        float leftRange = leftEdge.x + halfLength;
+        float rightRange = rightEdge.x - halfLength;
+
+        //print("Left Range = " + leftRange);
+        //print("Right Range = " + rightRange);
+
+        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 7f);
+        transform.position = randomPosition;
     }
     void HandleMovement()
     {
@@ -64,10 +84,11 @@ public class Word : MonoBehaviour {
         {
             //print(i + " " + _word[i]);
 
-            Vector2 newPos = new Vector2(xStartPos, crashPos.y + 0.5f);
+            //Vector2 newPos = new Vector2(xStartPos, crashPos.y + 0.5f);
+            Vector2 newPos = new Vector2(xStartPos, crashPos.y + 0.0f);
             go = Instantiate(explodingPF, newPos, Quaternion.identity);
             go.GetComponentInChildren<TMP_Text>().text = _word[i].ToString();
-            go.GetComponentInChildren<Rigidbody2D>().AddForce(transform.up * FORCE);
+            //go.GetComponentInChildren<Rigidbody2D>().AddForce(transform.up * FORCE);
             xStartPos += CHAR_WIDTH;
         }
 
@@ -114,10 +135,6 @@ public class Word : MonoBehaviour {
     {
         return hasCrashed;
     }
-    //public bool HasBeenTyped()
-    //{
-    //    return hasBeenTyped;
-    //}
     public string GetWord()
     {
         return _word;
@@ -126,6 +143,4 @@ public class Word : MonoBehaviour {
     {
         text.text = _word;
     }
-
-
 }

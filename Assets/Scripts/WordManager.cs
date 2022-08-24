@@ -6,34 +6,36 @@ using TMPro;
 
 public class WordManager : MonoBehaviour
 {
+    GameManager gameManager;
+
+    // WORD stuff
     public TMP_Text numberOfWords;
-    public TMP_Text scoreText;
-    public TMP_Text livesText;
+    //public TMP_Text scoreText;
+    //public TMP_Text livesText;
 
     public List<GameObject> words;
     public List<GameObject> letters;
 
-    public WordSpawner wordSpawner;
+    //public WordSpawner wordSpawner;
 
     private bool hasActiveWord;
     private GameObject activeWord;
 
     private bool canTypeWord = true;
 
-    private int lives;
-    private int score = 0;
+    //private int lives;
+    //private int score = 0;
 
-    GameManager gameManager;
+
 
     bool allWordsDropped = false;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        lives = gameManager.GetLives();
-        score = gameManager.GetScore();
+        //lives = gameManager.GetLives();
+        //score = gameManager.GetScore();
 
-        ShowLives();
     }
 
     private void Update()
@@ -42,7 +44,7 @@ public class WordManager : MonoBehaviour
         // Removes words off screen
         ShowNumberOfWords();
         //ShowScore();
-        RemoveWhenOffScreen();
+        RemoveWhenCrashed();
         ShowWords();
     }
 
@@ -52,20 +54,20 @@ public class WordManager : MonoBehaviour
         words.Add(_word);
     }
 
-    public void AddLetter()
+    public void AddLetter(GameObject _letter)
     {
-        GameObject letter = wordSpawner.SpawnLetter();
-        letters.Add(letter);
-        canTypeWord = false;
+        //GameObject letter = wordSpawner.SpawnLetter();
+        letters.Add(_letter);
+        //canTypeWord = false;
     }
 
-    public void TypeLetter(char letter)
+    public void TypeLetter(char typedLetter)
     {
         // WHEN KEYBOARD CHARACTER TYPED, CHECK IF IT'S THE FIRST LETTER OF A WORD
         // AND SET IT THE ACTIVE WORD
         if (hasActiveWord)
         {
-            if (activeWord.GetComponent<Word>().GetNextLetter() == letter)
+            if (activeWord.GetComponent<Word>().GetNextLetter() == typedLetter)
             {
                 activeWord.GetComponent<Word>().RemoveLetter();
             }
@@ -74,19 +76,9 @@ public class WordManager : MonoBehaviour
         // OF ANY WORD - THEN SET THAT WORD AS ACTIVE WORD
         else
         {
-            //foreach (GameObject word in words)
-            //{
-            //    if (word.GetComponent<Word>().GetNextLetter() == letter)
-            //    {
-            //        activeWord = word;
-            //        hasActiveWord = true;
-            //        word.GetComponent<Word>().RemoveLetter();
-            //        break;
-            //    }
-            //}
             for (int i = 0; i < words.Count; i++)
             {
-                if (words[i].GetComponent<Word>().GetNextLetter() == letter)
+                if (words[i].GetComponent<Word>().GetNextLetter() == typedLetter)
                 {
                     activeWord = words[i];
                     hasActiveWord = true;
@@ -100,26 +92,21 @@ public class WordManager : MonoBehaviour
         if (hasActiveWord && activeWord.GetComponent<Word>().HasWordBeenTyped())
         {
             hasActiveWord = false;
-            //Destroy(activeWord);
-            ////words.Remove(activeWord);
-            //gameManager.SetScore(+1);
-            //CheckIfAllDropped();
         }
 
         // SPECIAL CHAR BOMBS
-
+        print("Num letters = " + letters.Count);
         // Letter bombs & check if last letter
         for (int i = 0; i < letters.Count; i++)
         {
             Letter l = letters[i].GetComponent<Letter>();
-
-
-            if (l.GetLetter() == letter)
+            print("Letters " + i + " " + letters[i]);
+            if (l.GetLetter() == typedLetter)
             {
                 Destroy(letters[i]);
                 letters.RemoveAt(i);
-                gameManager.SetScore(+1);
-                CheckIfAllDropped();
+                gameManager.SetScore(+10);
+                //CheckIfAllDropped();
             }
         }
     }
@@ -134,61 +121,46 @@ public class WordManager : MonoBehaviour
             {
                 print("Remove Word " + i);
             }
-
         }
     }
 
-    public void RemoveWhenOffScreen()
+    public void RemoveWhenCrashed()
     {
         // Remove word
         for (int i = 0; i < words.Count; i++)
         {
             Word w = words[i].GetComponent<Word>();
 
-            //Word w = words[i];
-
-            if (w.IsOffScreen())
-            {
-                //Destroy(words[i]);
-                //words.RemoveAt(i);
-                //hasActiveWord = false;
-                //CheckIfAllDropped();
-                //DecreaseLives();
-                //ShowLives();
-            }
             if (w.HasCrashed())
             {
                 //w.HandleExplosion();
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;
-                CheckIfAllDropped();
-                DecreaseLives();
-                ShowLives();
+                //CheckIfAllDropped();
+                //DecreaseLives();
 
             }
             if (w.HasWordBeenTyped())
             {
-                gameManager.SetScore(+1);
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;
-                CheckIfAllDropped();
-                DecreaseLives();
-                ShowLives();
+                //CheckIfAllDropped();
+                IncreaseScore();
             }
         }
         // Remove letter
         for (int i = 0; i < letters.Count; i++)
         {
             Letter letter = letters[i].GetComponent<Letter>();
-            if (letter.IsOffScreen())
+            if (letter.HasCrashed())
             {
                 Destroy(letters[i]);
                 letters.RemoveAt(i);
                 //hasActiveWord = false;
-                DecreaseLives();
-                CheckIfAllDropped();
+                //DecreaseLives();
+                //CheckIfAllDropped();
             }
         }
         // check if all words done
@@ -219,17 +191,21 @@ public class WordManager : MonoBehaviour
     {
         gameManager.SetLives(-1);
     }
-
-    private void ShowLives()
+    void IncreaseScore()
     {
-        livesText.text = gameManager.GetLives().ToString();
+        gameManager.SetScore(1);
     }
 
-    private void ShowScore()
-    {
-        scoreText.text = gameManager.GetScore().ToString();
+    //private void ShowLives()
+    //{
+    //    livesText.text = gameManager.GetLives().ToString();
+    //}
 
-    }
+    //private void ShowScore()
+    //{
+    //    scoreText.text = gameManager.GetScore().ToString();
+
+    //}
 
     private void ShowNumberOfWords()
     {
