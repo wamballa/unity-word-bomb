@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+
+        
     }
 
     public void SetScore(int i)
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(CheckIfFull());
     }
 
     // Update is called once per frame
@@ -49,11 +51,40 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
         CheckLives();
-        CheckIfFull();
+
     }
-    void CheckIfFull()
+    IEnumerator CheckIfFull()
     {
+        yield return new WaitForSeconds(1f);
         /////////////////////////////////////////////////////////////////////
+        //GameObjects [] go = Fin
+        GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
+        float highPoint = 0;
+        foreach(GameObject go in letters)
+        {
+            if (go.transform.position.y > highPoint)
+                highPoint = go.transform.position.y;
+        }
+
+        Vector2 topPoint = new Vector2(0, 1);
+        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
+        float topRange = topEdge.y;
+
+        //print("Top Edge = " + topRange);
+
+        if (highPoint > topRange) {
+            StartCoroutine(GameOver());
+        }
+
+        //print("High Point " + highPoint);
+        StartCoroutine(CheckIfFull());
+
+    }
+
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(1f);
+        print("GAME OVER");
     }
     private void UpdateUI()
     {

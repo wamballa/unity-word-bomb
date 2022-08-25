@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5116653592451186667}
   m_Layer: 0
-  m_Name: ExplodeLetterPF
+  m_Name: ExplodedLetterPF
   m_TagString: ExplodedLetter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

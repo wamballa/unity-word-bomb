@@ -47,7 +47,7 @@ public class Letter : MonoBehaviour
         Vector2 rightEdge = Camera.main.ViewportToWorldPoint(rightPoint);
         float leftRange = leftEdge.x + halfLength;
         float rightRange = rightEdge.x - halfLength;
-        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 7f);
+        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 8.5f);
         transform.position = randomPosition;
     }
     private void SetLetter()
@@ -62,7 +62,7 @@ public class Letter : MonoBehaviour
     void HandleExplosion()
     {
         if (!hasCrashed) return;
-        print("Leter Crash "+letter);
+        //print("Leter Crash "+letter);
 
         GameObject go = Instantiate(explodingLetterPF, crashPos, Quaternion.identity);
         go.GetComponentInChildren<TMP_Text>().text = letter.ToString();
