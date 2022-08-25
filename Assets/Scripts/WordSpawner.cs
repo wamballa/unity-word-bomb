@@ -13,21 +13,21 @@ public class WordSpawner : MonoBehaviour {
 	// Level constants
 	private int wordCount = 0;
 	private int letterCount = 0;
-	private float wordDelay = 5f;
+	public float wordDelay = 5f;
 	private float nextWordTime = 0f;
 	private bool canDropWord = false;
 
-	// Counters and timers
+    // Counters and timers
 
-	bool canDropLetterBomb = false;
-	private int _wordCounter = 0;
-	private int _letterCounter = 0;
-	//private bool lastWordDropped = false;
-	private bool lastLetterDropped = false;
+    //bool canDropLetterBomb = false;
+    private int _wordCounter = 0;
+    //private int _letterCounter = 0;
+    //private bool lastWordDropped = false;
+    private bool lastLetterDropped = false;
 
 	// Letter stuff
 	bool canDropLetter = false;
-	private float letterDelay = 3f;
+	public float letterDelay = 3f;
 	private float nextLetterTime = 0f;
 
 	private void Start()
@@ -40,7 +40,10 @@ public class WordSpawner : MonoBehaviour {
 		canDropWord = true;
 		wordDelay = 1f;
 
-		//nextLetterTime = Time.time + letterDelay;
+		//Get delay times
+		SetDelayTimes();
+
+		nextLetterTime = Time.time + letterDelay;
 	}
 
     private void Update()
@@ -48,6 +51,12 @@ public class WordSpawner : MonoBehaviour {
 		SpawnWord();
         SpawnLetter();
     }
+
+	public void SetDelayTimes()
+    {
+		wordDelay = gameManager.GetFallDelayTime("word");
+		letterDelay = gameManager.GetFallDelayTime("letter");
+	}
 
 	private void SpawnWord()
 	{

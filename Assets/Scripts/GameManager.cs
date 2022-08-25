@@ -14,36 +14,32 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
 
+    // Global variables
+    [SerializeField] private float wordFallSpeed;
+    [SerializeField] private float letterFallSpeed;
+    [SerializeField] private float wordFallDelay;
+    [SerializeField] private float letterFallDelay;
+
     // Bools
     bool isGameOver = false;
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+    }
+   
 
-        
-    }
 
-    public void SetScore(int i)
-    {
-        score = score + i;
-    }
-    public int GetScore()
-    {
-        return score;
-    }
-    public void SetLives(int i)
-    {
-        lives = lives + i;
-    }
-    public int GetLives()
-    {
-        return lives;
-    }
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(CheckIfFull());
+        // Set initial values
+        if (wordFallSpeed == 0) wordFallSpeed = 0.5f;
+        if (letterFallSpeed == 0) letterFallSpeed = 0.5f;
+
+        if (wordFallDelay == 0) wordFallDelay = 5f;
+        if (letterFallDelay ==0 ) letterFallDelay = 10f;
     }
 
     // Update is called once per frame
@@ -80,6 +76,42 @@ public class GameManager : MonoBehaviour
         StartCoroutine(CheckIfFull());
 
     }
+
+
+    public float GetFallSpeed(string _type)
+    {
+        switch (_type)
+        {
+            case "word":
+                return wordFallSpeed;
+                break;
+            case "letter":
+                return letterFallSpeed;
+                break;
+            default:
+                return 1f;
+                break;
+        }
+    }
+    public float GetFallDelayTime (string _type)
+    {
+        switch (_type)
+        {
+            case "word":
+                return wordFallDelay;
+                break;
+            case "letter":
+                return letterFallDelay;
+                break;
+            default:
+                return 1f;
+                break;
+        }
+    }
+    //public float GetFallDelay()
+    //{
+    //    return 1f;
+    //}
 
     private IEnumerator GameOver()
     {
@@ -149,5 +181,22 @@ public class GameManager : MonoBehaviour
         }
 
 
+    }
+
+    public void SetScore(int i)
+    {
+        score = score + i;
+    }
+    public int GetScore()
+    {
+        return score;
+    }
+    public void SetLives(int i)
+    {
+        lives = lives + i;
+    }
+    public int GetLives()
+    {
+        return lives;
     }
 }

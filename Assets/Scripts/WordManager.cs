@@ -95,14 +95,15 @@ public class WordManager : MonoBehaviour
         }
 
         // SPECIAL CHAR BOMBS
-        print("Num letters = " + letters.Count);
+        //print("Num letters = " + letters.Count);
         // Letter bombs & check if last letter
         for (int i = 0; i < letters.Count; i++)
         {
             Letter l = letters[i].GetComponent<Letter>();
-            print("Letters " + i + " " + letters[i]);
+            //print("Letters " + i + " " + letters[i]);
             if (l.GetLetter() == typedLetter)
             {
+                l.HandleExplosion();
                 Destroy(letters[i]);
                 letters.RemoveAt(i);
                 gameManager.SetScore(+10);

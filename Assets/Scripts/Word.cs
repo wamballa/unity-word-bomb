@@ -5,7 +5,9 @@ using TMPro;
 
 
 public class Word : MonoBehaviour {
-
+    
+    // GLOBAL STUFF
+    private GameManager gameManager;
     // WORD STUFF
     private string _word;
     private int typeIndex;
@@ -13,7 +15,7 @@ public class Word : MonoBehaviour {
     public CollisionHandler collisionHandler;
     public GameObject explodingPF;
     public Vector2 crashPos;
-    private float fallSpeed = 1f;
+    [SerializeField] private float fallSpeed;
     bool isOffScreen;
     bool hasCrashed;
     bool hasBeenTyped;
@@ -39,6 +41,13 @@ public class Word : MonoBehaviour {
 
         SetXPosition();
         SetText();
+
+        // Get fall speed
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (gameManager == null) print("ERROR: no game manager found");
+        SetFallSpeeds();
+
+
     }
 
     private void FixedUpdate()
@@ -46,6 +55,11 @@ public class Word : MonoBehaviour {
         HandleMovement();
         CheckIfCrashed();
         HandleExplosion();
+    }
+
+    public void SetFallSpeeds()
+    {
+        fallSpeed = gameManager.GetFallSpeed("word");
     }
     void SetXPosition()
     {

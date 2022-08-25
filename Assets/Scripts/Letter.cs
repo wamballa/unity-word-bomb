@@ -5,6 +5,9 @@ using TMPro;
 
 public class Letter : MonoBehaviour
 {
+    // GLOBAL STUFF
+    private GameManager gameManager;
+
     private string letter;
     private int typeIndex;
     public TMP_Text text;
@@ -13,14 +16,18 @@ public class Letter : MonoBehaviour
     // Collision
     bool hasCrashed;
     public LetterCollisionHandler letterCollisionHandler;
-    float fallSpeed = 1f;
+    float fallSpeed;
     Vector2 crashPos;
     public GameObject explodingLetterPF;
+    private Rigidbody2D rigidBody;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        // Get rigidbody
+        rigidBody = transform.GetComponentInChildren<Rigidbody2D>();
+        if (rigidBody == null) print("ERROR: no rigidbody");
         letterCollisionHandler = transform.GetComponentInChildren<LetterCollisionHandler>();
         if (letterCollisionHandler == null) print("ERROR; no collision handler found");
 
@@ -29,13 +36,23 @@ public class Letter : MonoBehaviour
 
         SetXPosition();
         SetLetter();
+
+        // Get fall speed
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (gameManager == null) print("ERROR: no game manager found");
+        SetFallSpeeds();
+    }
+
+    public void SetFallSpeeds()
+    {
+        fallSpeed = gameManager.GetFallSpeed("letter");
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
         CheckIfCrashed();
-        HandleExplosion();
+        HandleCrash();
     }
     void SetXPosition()
     {
@@ -59,7 +76,18 @@ public class Letter : MonoBehaviour
     {
         return letter[0];
     }
-    void HandleExplosion()
+    public void HandleExplosion()
+    {
+        print("HANDLE EXPLOSION");
+        Vector2 dir = Vector2.up + Vector2.right + Vector2.down + Vector2.down + Vector2.left;
+        float force = 300;
+        rigidBody.AddForceAtPosition(
+            dir*force, 
+            transform.position, 
+            ForceMode2D.Impulse
+            );
+    }
+    void HandleCrash()
     {
         if (!hasCrashed) return;
         //print("Leter Crash "+letter);
