@@ -105,7 +105,11 @@ public class WordManager : MonoBehaviour
             {
                 l.HandleExplosion();
                 //Destroy(letters[i]);
+
+
                 letters.RemoveAt(i);
+
+
                 gameManager.SetScore(+10);
                 //CheckIfAllDropped();
             }

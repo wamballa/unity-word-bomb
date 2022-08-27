@@ -9,11 +9,11 @@ public class Explosion : MonoBehaviour
     [SerializeField] private float explosionForceMulti = 5;
     [SerializeField] private float explosionRadius = 5;
     [SerializeField] private LayerMask layerMask;
-    // sfx
+    // Explosion stuff
     [SerializeField] private AudioClip explodeClip;
     private AudioSource audioSource;
-
     [SerializeField] private GameObject[] explosionsPF;
+    [SerializeField] private GameObject sprite;
 
     bool canExplode;
 
@@ -25,17 +25,25 @@ public class Explosion : MonoBehaviour
     private void Update()
     {
         HandleExplosion();
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            PlaySFX();
+        }
     }
 
 
     void HandleExplosion()
     {
         if (!canExplode) return;
-        print("EXPLODE");
+        //print("EXPLODE "+transform.name);
+        HideLetter();
         PlaySFX();
-        SpawnPrefab(transform.position, 10);
+        SpawnPrefab(transform.position, 30);
         inExplosionRadius = Physics2D.OverlapCircleAll(
-            transform.position, explosionRadius, layerMask);
+            transform.position,
+            explosionRadius,
+            layerMask
+            );
 
         foreach (Collider2D o in inExplosionRadius)
         {
@@ -68,9 +76,7 @@ public class Explosion : MonoBehaviour
     }
     public void SetCanExplode()
     {
-        //print("SetCanExplode for "+transform.name);
         canExplode = true;
-        //print("Can explode = " + canExplode);
     }
 
     void SpawnPrefab(Vector2 pos, float scale)
@@ -79,18 +85,21 @@ public class Explosion : MonoBehaviour
         int rand = Random.Range(0, explosionsPF.Length-1);
         GameObject go = Instantiate(explosionsPF[rand], pos, Quaternion.identity);
         go.transform.localScale = Vector2.one * scale;
-        Destroy(go, 0.5f);
-        Destroy(transform.gameObject);
+        Destroy(go, 1f);
+        Destroy(transform.gameObject, 1f);
     }
 
     void PlaySFX()
     {
         print("SAY BOOOOOM");
-        //float rand = Random.Range(0.5f, 1.5f);
-        //audioSource.pitch = rand;
+        float rand = Random.Range(0.5f, 1.5f);
+        audioSource.pitch = rand;
         audioSource.PlayOneShot(explodeClip);
     }
-
+    void HideLetter()
+    {
+        sprite.SetActive(false);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, explosionRadius);

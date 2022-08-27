@@ -37,6 +37,15 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        TouchScreenKeyboard.Open(
+            "",
+            TouchScreenKeyboardType.Default,
+            false,
+            false,
+            true
+            );
+
+
         StartCoroutine(CheckIfFull());
         // Set initial values
         //if (wordFallSpeed == 0) wordFallSpeed = 2f;
