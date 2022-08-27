@@ -21,6 +21,9 @@ public class Letter : MonoBehaviour
     public GameObject explodingLetterPF;
     private Rigidbody2D rigidBody;
 
+    // Explosion
+    [SerializeField] private Explosion explosionScript;
+
 
     // Start is called before the first frame update
     void Start()
@@ -78,14 +81,18 @@ public class Letter : MonoBehaviour
     }
     public void HandleExplosion()
     {
-        print("HANDLE EXPLOSION");
-        Vector2 dir = Vector2.up + Vector2.right + Vector2.down + Vector2.down + Vector2.left;
-        float force = 300;
-        rigidBody.AddForceAtPosition(
-            dir*force, 
-            transform.position, 
-            ForceMode2D.Impulse
-            );
+
+        //Vector2 dir = Vector2.up + Vector2.right + Vector2.down + Vector2.down + Vector2.left;
+        //float force = 300;
+        //rigidBody.AddForceAtPosition(
+        //    dir*force, 
+        //    transform.position, 
+        //    ForceMode2D.Impulse
+        //    );
+
+        /////
+        explosionScript.SetCanExplode();
+
     }
     void HandleCrash()
     {

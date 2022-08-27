@@ -19,6 +19,7 @@ public class Word : MonoBehaviour {
     bool isOffScreen;
     bool hasCrashed;
     bool hasBeenTyped;
+    bool wordHasExploded;
     float boxColliderWidth;
     float CHAR_WIDTH = 0.5f;
     float FORCE = 2f;
@@ -120,6 +121,15 @@ public class Word : MonoBehaviour {
     {
         bool wordTyped = (typeIndex >= _word.Length);
         return wordTyped;
+    }
+
+    public void SetWordHasBeenExploded()
+    {
+        wordHasExploded = true;
+    }
+    public bool GetWordHasBeenExploded()
+    {
+        return wordHasExploded;
     }
 
     public char GetNextLetter()

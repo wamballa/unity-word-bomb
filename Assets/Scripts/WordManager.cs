@@ -104,7 +104,7 @@ public class WordManager : MonoBehaviour
             if (l.GetLetter() == typedLetter)
             {
                 l.HandleExplosion();
-                Destroy(letters[i]);
+                //Destroy(letters[i]);
                 letters.RemoveAt(i);
                 gameManager.SetScore(+10);
                 //CheckIfAllDropped();
@@ -143,6 +143,14 @@ public class WordManager : MonoBehaviour
 
             }
             if (w.HasWordBeenTyped())
+            {
+                Destroy(words[i]);
+                words.RemoveAt(i);
+                hasActiveWord = false;
+                //CheckIfAllDropped();
+                IncreaseScore();
+            }
+            if (w.GetWordHasBeenExploded())
             {
                 Destroy(words[i]);
                 words.RemoveAt(i);

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5116653592451186667}
   - component: {fileID: 7595351983136466328}
+  - component: {fileID: 5638955854049799749}
   m_Layer: 0
   m_Name: LetterPF
   m_TagString: Letter
@@ -49,6 +50,34 @@ MonoBehaviour:
   letterCollisionHandler: {fileID: 2223013204367164532}
   explodingLetterPF: {fileID: 4755563703907005480, guid: 00f4e223e0f243040af64df86cba546c,
     type: 3}
+  explosionScript: {fileID: 5638955854049799749}
+--- !u!114 &5638955854049799749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755563703907005480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4b50a9ad13ef41a48188e7bf9334470, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionForceMulti: 5
+  explosionRadius: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  explosionsPF:
+  - {fileID: 7908454837571331772, guid: 1e63ad1cfbdf842da8778f37c07a1b10, type: 3}
+  - {fileID: 3737592370621799140, guid: fe251e90829b448da94bc128c1361600, type: 3}
+  - {fileID: 9003606892067503178, guid: 3d55b628923284268aec8ddd582063e1, type: 3}
+  - {fileID: 1115109226879417102, guid: 5bb9d57ad847c4caab75a81d2cb628a9, type: 3}
+  - {fileID: 5345358028972168028, guid: 85908cec956a84aa59b598476dcabf0f, type: 3}
+  - {fileID: 6472431961587220186, guid: 03d5865da6b3746639acdd263470d2bb, type: 3}
+  - {fileID: 6548798603034763713, guid: 354074033b7ec4715bea188505482b96, type: 3}
+  - {fileID: 7701839729726718551, guid: b43bbf4adcb564b218bbee5ebdd2777b, type: 3}
+  - {fileID: 1781693541940118483, guid: cd2229ee6a31b4d958ad6a33e7cdce0a, type: 3}
 --- !u!1 &8088291047386358913
 GameObject:
   m_ObjectHideFlags: 0

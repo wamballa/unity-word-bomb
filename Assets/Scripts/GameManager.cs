@@ -15,10 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text livesText;
 
     // Global variables
-    [SerializeField] private float wordFallSpeed;
-    [SerializeField] private float letterFallSpeed;
-    [SerializeField] private float wordFallDelay;
-    [SerializeField] private float letterFallDelay;
+    [Range(0, 10)]
+    [SerializeField] private float wordFallSpeed = 1;
+    [Range(0, 10)]
+    [SerializeField] private float letterFallSpeed = 1;
+    [Range(0, 10)]
+    [SerializeField] private float wordFallDelay = 1;
+    [Range(0, 10)]
+    [SerializeField] private float letterFallDelay = 1;
 
     // Bools
     bool isGameOver = false;
@@ -35,11 +39,11 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(CheckIfFull());
         // Set initial values
-        if (wordFallSpeed == 0) wordFallSpeed = 0.5f;
-        if (letterFallSpeed == 0) letterFallSpeed = 0.5f;
+        //if (wordFallSpeed == 0) wordFallSpeed = 2f;
+        //if (letterFallSpeed == 0) letterFallSpeed = 0.5f;
 
-        if (wordFallDelay == 0) wordFallDelay = 5f;
-        if (letterFallDelay ==0 ) letterFallDelay = 10f;
+        //if (wordFallDelay == 0) wordFallDelay = 1f;
+        //if (letterFallDelay ==0 ) letterFallDelay = 10f;
     }
 
     // Update is called once per frame
