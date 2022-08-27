@@ -71,7 +71,7 @@ public class Letter : MonoBehaviour
         transform.position = randomPosition;
     }
     private void SetLetter()
-    {
+    { 
         text.text = letter;
     }
 
@@ -81,18 +81,7 @@ public class Letter : MonoBehaviour
     }
     public void HandleExplosion()
     {
-
-        //Vector2 dir = Vector2.up + Vector2.right + Vector2.down + Vector2.down + Vector2.left;
-        //float force = 300;
-        //rigidBody.AddForceAtPosition(
-        //    dir*force, 
-        //    transform.position, 
-        //    ForceMode2D.Impulse
-        //    );
-
-        /////
         explosionScript.SetCanExplode();
-
     }
     void HandleCrash()
     {

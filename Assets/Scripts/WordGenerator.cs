@@ -8,8 +8,8 @@ public class WordGenerator : MonoBehaviour {
 									"somber", "majestic", "jump", "pretty", "wound", "jazzy",
 									"memory", "join", "crack", "grade", "boot", "cloudy", "sick",
 									"mug", "hot", "tart", "dangerous", "mother", "rustic", "economic",
-									"weird", "cut", "parallel", "wood", "encouraging", "interrupt",
-									"guide", "long", "chief", "mom", "signal", "rely", "abortive",
+									
+									"guide", "long", "chief", "mum", "signal", "rely", "abortive",
 									"hair", "representative", "earth", "grate", "proud", "feel",
 									"hilarious", "addition", "silent", "play", "floor", "numerous",
 									"friend", "pizzas", "building", "organic", "past", "mute", "unusual",
@@ -27,5 +27,10 @@ public class WordGenerator : MonoBehaviour {
 
 		return randomWord;
 	}
+
+    private void Start()
+    {
+		print("WORDLIBRARY LENGTH = " + wordList.Length);
+    }
 
 }

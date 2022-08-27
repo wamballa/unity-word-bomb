@@ -9,10 +9,18 @@ public class Explosion : MonoBehaviour
     [SerializeField] private float explosionForceMulti = 5;
     [SerializeField] private float explosionRadius = 5;
     [SerializeField] private LayerMask layerMask;
+    // sfx
+    [SerializeField] private AudioClip explodeClip;
+    private AudioSource audioSource;
 
     [SerializeField] private GameObject[] explosionsPF;
 
     bool canExplode;
+
+    private void Start()
+    {
+        audioSource = gameObject.GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
@@ -24,11 +32,14 @@ public class Explosion : MonoBehaviour
     {
         if (!canExplode) return;
         print("EXPLODE");
+        PlaySFX();
+        SpawnPrefab(transform.position, 10);
         inExplosionRadius = Physics2D.OverlapCircleAll(
             transform.position, explosionRadius, layerMask);
+
         foreach (Collider2D o in inExplosionRadius)
         {
-            print("Collided with " + o.transform.name);
+            //print("Collided with " + o.transform.name);
             //Rigidbody2D o_rb = o.GetComponent<Rigidbody2D>();
             //if (o_rb != null)
             //{
@@ -44,12 +55,12 @@ public class Explosion : MonoBehaviour
             if (w != null)
             {
                 w.SetWordHasBeenExploded();
-                SpawnPrefab(o.transform.position, 10);
+                //SpawnPrefab(o.transform.position, 10);
             }
             if (o.transform.CompareTag("ExplodedLetter"))
             {
                 Destroy(o.gameObject);
-                SpawnPrefab(o.transform.position, 10);
+                //SpawnPrefab(o.transform.position, 10);
             }
         }
 
@@ -64,11 +75,20 @@ public class Explosion : MonoBehaviour
 
     void SpawnPrefab(Vector2 pos, float scale)
     {
+
         int rand = Random.Range(0, explosionsPF.Length-1);
         GameObject go = Instantiate(explosionsPF[rand], pos, Quaternion.identity);
         go.transform.localScale = Vector2.one * scale;
         Destroy(go, 0.5f);
         Destroy(transform.gameObject);
+    }
+
+    void PlaySFX()
+    {
+        print("SAY BOOOOOM");
+        //float rand = Random.Range(0.5f, 1.5f);
+        //audioSource.pitch = rand;
+        audioSource.PlayOneShot(explodeClip);
     }
 
     private void OnDrawGizmos()

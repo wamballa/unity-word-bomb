@@ -14,8 +14,8 @@ public class Word : MonoBehaviour {
     public TMP_Text text;
     public CollisionHandler collisionHandler;
     public GameObject explodingPF;
-    public Vector2 crashPos;
-    [SerializeField] private float fallSpeed;
+    private Vector2 crashPos;
+    private float fallSpeed;
     bool isOffScreen;
     bool hasCrashed;
     bool hasBeenTyped;
@@ -27,14 +27,21 @@ public class Word : MonoBehaviour {
     // LETTER STUFF
     private string _char;
 
+    // SOUNDS STUFF
+    public AudioClip[] audioClips;
+    private AudioClip wordSFX;
+    bool hasSpoken;
+    AudioSource audioSource;
+
 
     private void Start()
     {
         _word = WordGenerator.GetRandomWord();
         transform.name = _word;
 
-        _char = LetterGenerator.GetRandomLetter();
+        audioSource = gameObject.GetComponent < AudioSource >();
 
+        _char = LetterGenerator.GetRandomLetter();
 
         BoxCollider2D bc = transform.GetComponentInChildren<BoxCollider2D>();
 
@@ -48,7 +55,7 @@ public class Word : MonoBehaviour {
         if (gameManager == null) print("ERROR: no game manager found");
         SetFallSpeeds();
 
-
+        SetAudio();
     }
 
     private void FixedUpdate()
@@ -56,8 +63,39 @@ public class Word : MonoBehaviour {
         HandleMovement();
         CheckIfCrashed();
         HandleExplosion();
+        SpeakWord();
     }
+    private void SpeakWord()
+    {
+        if (hasSpoken) return;
 
+        if (IsVisible())
+        {
+            //print(transform.name + " is visible");
+            audioSource.PlayOneShot(wordSFX);
+            hasSpoken = true;
+        }
+    }
+    private void SetAudio()
+    {
+        for (int i=0; i< audioClips.Length; i++)
+        {
+            if (audioClips[i].name == _word)
+            {
+                wordSFX = audioClips[i];
+            }
+        }
+        // DEBUG
+        if (wordSFX == null) wordSFX = audioClips[0];
+    }
+    private bool IsVisible()
+    {
+        Vector2 topPoint = new Vector2(0, 1);
+        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
+
+        float topRange = topEdge.y - 0.5f;
+        return transform.position.y < topRange ;
+    }
     public void SetFallSpeeds()
     {
         fallSpeed = gameManager.GetFallSpeed("word");
