@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text debugText;
 
     // Global variables
     [Range(0, 10)]
@@ -31,20 +32,23 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
     }
-   
+
+    //public string stringToEdit = "Hello World";
+    //private TouchScreenKeyboard keyboard;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        TouchScreenKeyboard.Open(
-            "",
-            TouchScreenKeyboardType.Default,
-            false,
-            false,
-            true
-            );
-
+        //TouchScreenKeyboard.Open(
+        //    "",
+        //    TouchScreenKeyboardType.Default,
+        //    false,
+        //    false,
+        //    true
+        //    );
+        //TouchScreenKeyboard.hideInput = true;
+        //keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Social);
 
         StartCoroutine(CheckIfFull());
         // Set initial values
@@ -55,11 +59,73 @@ public class GameManager : MonoBehaviour
         //if (letterFallDelay ==0 ) letterFallDelay = 10f;
     }
 
+    //bool hasGUIchanged = false;
+
+    private void OnGUI()
+    {
+        //stringToEdit = GUI.TextField(new Rect(100, 500, 200, 30), stringToEdit, 30);
+
+        //if (GUI.Button(new Rect(100, 50, 600, 100), "Default"))
+        //{
+        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
+        //}
+        //if (GUI.Button(new Rect(100, 650, 200, 100), "ASCIICapable"))
+        //{
+        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
+        //}
+        //if (GUI.Button(new Rect(100, 750, 200, 100), "One Time Code"))
+        //{
+        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.OneTimeCode);
+        //}
+
+        //if (GUI.changed)
+        //{
+        //    hasGUIchanged = true;
+        //}
+        //Event e = Event.current;
+
+
+        //if (e.keyCode == KeyCode.K)
+        //{
+        //    //hasGUIchanged = true;
+        //    debugText.text = "K";
+        //}
+        //{
+
+        //}
+        //if (e.keyCode == KeyCode.Return)
+        //{
+        //    //hasGUIchanged = true;
+        //    debugText.text = "Return";
+        //}
+        //if (e.keyCode == KeyCode.Space)
+        //{
+        //    //hasGUIchanged = true;
+        //    debugText.text = "Space";
+        //}
+
+        //else if (false == hasGUIchanged)
+        //{
+        //    //stringToEdit = GUI.TextField(
+        //    //    new Rect(0, 0, 100, 50), stringToEdit, 25);
+
+        //}
+    }
+
     // Update is called once per frame
     void Update()
     {
         UpdateUI();
         CheckLives();
+
+        //if (hasGUIchanged)
+        //{
+        //    debugText.text = "GUI CHANGED";
+        //}
+        //else
+        //{
+        //    debugText.text = "---";
+        //}
 
     }
     IEnumerator CheckIfFull()
