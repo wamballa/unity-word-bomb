@@ -144,6 +144,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bb181c1977cb1462d944f4b711bf1541, type: 3}
   - {fileID: 8300000, guid: 3e5e081d3cc5b4203b67ea234bd700f8, type: 3}
   - {fileID: 8300000, guid: af904617359ae458c87ddef5ae617243, type: 3}
+  vfxExplosion: {fileID: 7677723302219823008, guid: bc7571c22377a44feba6c1c9c3173077,
+    type: 3}
 --- !u!82 &2918421451719996696
 AudioSource:
   m_ObjectHideFlags: 0
@@ -322,7 +324,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1807318242682320896
 MonoBehaviour:

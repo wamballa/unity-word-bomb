@@ -10,10 +10,10 @@ public class GameManager : MonoBehaviour
     public int levelNumber = 0;
     public int score;
     private int lives = 100;
-    [SerializeField] private TMP_Text levelText;
+    //[SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
-    [SerializeField] private TMP_Text debugText;
+    //[SerializeField] private TMP_Text debugText;
 
     // Global variables
     [Range(0, 10)]
@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
     }
     private void UpdateUI()
     {
-        levelText.text = levelNumber.ToString();
+        //levelText.text = levelNumber.ToString();
         scoreText.text = score.ToString();
         livesText.text = lives.ToString();
     }

@@ -18,11 +18,11 @@ public class Word : MonoBehaviour {
     private float fallSpeed;
     bool isOffScreen;
     bool hasCrashed;
-    bool hasBeenTyped;
+    //bool hasBeenTyped;
     bool wordHasExploded;
-    float boxColliderWidth;
+
     float CHAR_WIDTH = 0.5f;
-    float FORCE = 2f;
+    BoxCollider2D boxCollider;
 
     // LETTER STUFF
     private string _char;
@@ -32,6 +32,9 @@ public class Word : MonoBehaviour {
     private AudioClip wordSFX;
     bool hasSpoken;
     AudioSource audioSource;
+
+    // EXPLOSION STUFF
+    public GameObject vfxExplosion;
 
 
     private void Start()
@@ -43,17 +46,18 @@ public class Word : MonoBehaviour {
 
         _char = LetterGenerator.GetRandomLetter();
 
-        BoxCollider2D bc = transform.GetComponentInChildren<BoxCollider2D>();
+        boxCollider = transform.GetComponentInChildren<BoxCollider2D>();
 
-        bc.size = new Vector2(_word.Length * CHAR_WIDTH, bc.size.y);
 
-        SetXPosition();
+
+        SetStartXPositioon();
         SetText();
+        SetBoxColliderWidth();
 
         // Get fall speed
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (gameManager == null) print("ERROR: no game manager found");
-        SetFallSpeeds();
+        SetFallSpeed();
 
         SetAudio();
     }
@@ -88,6 +92,15 @@ public class Word : MonoBehaviour {
         // DEBUG
         if (wordSFX == null) wordSFX = audioClips[0];
     }
+    private void SetBoxColliderWidth()
+    {
+        boxCollider.size = new Vector2(_word.Length * CHAR_WIDTH, boxCollider.size.y);
+    }
+    private float GetBoxColliderWidth()
+    {
+        print("WIDTH = " + boxCollider.size.x);
+        return boxCollider.size.x;
+    }
     private bool IsVisible()
     {
         Vector2 topPoint = new Vector2(0, 1);
@@ -96,11 +109,11 @@ public class Word : MonoBehaviour {
         float topRange = topEdge.y - 0.5f;
         return transform.position.y < topRange ;
     }
-    public void SetFallSpeeds()
+    public void SetFallSpeed()
     {
         fallSpeed = gameManager.GetFallSpeed("word");
     }
-    void SetXPosition()
+    void SetStartXPositioon()
     {
         float halfLength = (_word.Length * CHAR_WIDTH)/2;
 
@@ -131,7 +144,6 @@ public class Word : MonoBehaviour {
 
         float wordMidPoint = (_word.Length / 2) * 0.5f;
         float xStartPos = crashPos.x - wordMidPoint;
-
 
         for (int i=0; i < _word.Length; i++)
         {
@@ -175,20 +187,40 @@ public class Word : MonoBehaviour {
         return _word[typeIndex];
     }
 
-    public void TypeLetter()
-    {
-        typeIndex++;
-        RemoveLetter();
-    }
+    //public void TypeLetter()
+    //{
+    //    typeIndex++;
+    //    RemoveLetter();
+    //}
 
     public void RemoveLetter()
     {
         //text.text = text.text.Remove(0, 1);
+        SpawnExplosion();
+
         _word = _word.Remove(0, 1);
         text.color = Color.red;
         SetText();
-    }
+        SetBoxColliderWidth();
 
+    }
+    private void SpawnExplosion()
+    {
+        float wordMidPoint = (_word.Length / 2) * CHAR_WIDTH;
+        print("OFFSET = " + wordMidPoint);
+
+        float xStartPos = transform.position.x - wordMidPoint;
+        print("WORD START = " + xStartPos);
+
+        float halfLength = (_word.Length * CHAR_WIDTH) / 2;
+
+
+        float leftEdge = transform.position.x - (GetBoxColliderWidth() / 2);
+        leftEdge = transform.position.x - halfLength;
+        Vector2 newPos = new Vector2(leftEdge, transform.position.y - 0.25f) ;
+        GameObject go = Instantiate(vfxExplosion, newPos, Quaternion.identity);
+        Destroy(go, 1f);
+    }
     public bool IsOffScreen()
     {
         return isOffScreen;
