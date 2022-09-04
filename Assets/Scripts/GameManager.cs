@@ -7,9 +7,9 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-    public int levelNumber = 0;
+    //public int levelNumber = 0;
     public int score;
-    private int lives = 100;
+    //private int lives = 100;
     //[SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
@@ -25,12 +25,14 @@ public class GameManager : MonoBehaviour
     [Range(0, 10)]
     [SerializeField] private float letterFallDelay = 1;
 
+    [SerializeField] float FALL_TIMER = 2;
+
     // Bools
     bool isGameOver = false;
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     //public string stringToEdit = "Hello World";
@@ -40,93 +42,27 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //TouchScreenKeyboard.Open(
-        //    "",
-        //    TouchScreenKeyboardType.Default,
-        //    false,
-        //    false,
-        //    true
-        //    );
-        //TouchScreenKeyboard.hideInput = true;
-        //keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Social);
-
         StartCoroutine(CheckIfFull());
-        // Set initial values
-        //if (wordFallSpeed == 0) wordFallSpeed = 2f;
-        //if (letterFallSpeed == 0) letterFallSpeed = 0.5f;
-
-        //if (wordFallDelay == 0) wordFallDelay = 1f;
-        //if (letterFallDelay ==0 ) letterFallDelay = 10f;
+        StartCoroutine(FallDelayTimers());
     }
 
-    //bool hasGUIchanged = false;
-
-    private void OnGUI()
-    {
-        //stringToEdit = GUI.TextField(new Rect(100, 500, 200, 30), stringToEdit, 30);
-
-        //if (GUI.Button(new Rect(100, 50, 600, 100), "Default"))
-        //{
-        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default);
-        //}
-        //if (GUI.Button(new Rect(100, 650, 200, 100), "ASCIICapable"))
-        //{
-        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.ASCIICapable);
-        //}
-        //if (GUI.Button(new Rect(100, 750, 200, 100), "One Time Code"))
-        //{
-        //    keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.OneTimeCode);
-        //}
-
-        //if (GUI.changed)
-        //{
-        //    hasGUIchanged = true;
-        //}
-        //Event e = Event.current;
-
-
-        //if (e.keyCode == KeyCode.K)
-        //{
-        //    //hasGUIchanged = true;
-        //    debugText.text = "K";
-        //}
-        //{
-
-        //}
-        //if (e.keyCode == KeyCode.Return)
-        //{
-        //    //hasGUIchanged = true;
-        //    debugText.text = "Return";
-        //}
-        //if (e.keyCode == KeyCode.Space)
-        //{
-        //    //hasGUIchanged = true;
-        //    debugText.text = "Space";
-        //}
-
-        //else if (false == hasGUIchanged)
-        //{
-        //    //stringToEdit = GUI.TextField(
-        //    //    new Rect(0, 0, 100, 50), stringToEdit, 25);
-
-        //}
-    }
 
     // Update is called once per frame
     void Update()
     {
         UpdateUI();
-        CheckLives();
-
-        //if (hasGUIchanged)
-        //{
-        //    debugText.text = "GUI CHANGED";
-        //}
-        //else
-        //{
-        //    debugText.text = "---";
-        //}
-
+        //CheckLives();
+    }
+    /// <summary>
+    /// Speed up the fall speed periodically
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator FallDelayTimers()
+    {
+        yield return new WaitForSeconds(FALL_TIMER);
+        wordFallDelay -= 0.5f;
+        if (wordFallDelay < 0) wordFallDelay = 0;
+        StartCoroutine(FallDelayTimers());
     }
     IEnumerator CheckIfFull()
     {
@@ -195,72 +131,80 @@ public class GameManager : MonoBehaviour
     private IEnumerator GameOver()
     {
         yield return new WaitForSeconds(1f);
-        print("GAME OVER");
+        int highscore = PlayerPrefs.GetInt("highscore");
+        if (score > highscore) SaveSettings();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+    private void SaveSettings()
+    {
+        PlayerPrefs.SetInt("highscore", score);
+    }
+
     private void UpdateUI()
     {
         //levelText.text = levelNumber.ToString();
         scoreText.text = score.ToString();
-        livesText.text = lives.ToString();
+        //livesText.text = lives.ToString();
     }
-    void CheckLives()
-    {
-        if (!isGameOver)
-        {
-            if (lives == 0)
-            {
-                isGameOver = true;
-                CheckLives();
-                SceneManager.LoadScene("GameOver");
-            }
-        }
-    }
+    //void CheckLives()
+    //{
+    //    if (!isGameOver)
+    //    {
+    //        if (lives == 0)
+    //        {
+    //            isGameOver = true;
+    //            CheckLives();
+    //            SceneManager.LoadScene("GameOver");
+    //        }
+    //    }
+    //}
 
-    public void NextScene()
-    {
-        levelNumber++;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
+    //public void NextScene()
+    //{
+    //    levelNumber++;
+    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    //}
 
-    public int GetLevelNumber()
-    {
-        return levelNumber;
-    }
+    //public int GetLevelNumber()
+    //{
+    //    return levelNumber;
+    //}
 
-    public void GetLevelConfig(out int wordCount, out float wordDelay, out bool canDropWord, out int letterCount, out float letterDelay, out bool canDropLetter)
-    {
-        print("GETLEVELCONFIG - level number = " + levelNumber);
-        switch (levelNumber)
-        {
-            case 1:
-                wordCount = 5;
-                wordDelay = 3f;
-                canDropWord = true;
-                letterCount = 1;
-                letterDelay = 1f;
-                canDropLetter = false;
-                break;
-            case 2:
-                wordCount = 2;
-                wordDelay = 0.5f;
-                canDropWord = true;
-                letterCount = 1;
-                letterDelay = 1f;
-                canDropLetter = false;
-                break;
-            default:
-                //print("DEFAULT");
-                wordCount = 2;
-                wordDelay = 10f;
-                canDropWord = true;
-                letterCount = 1;
-                letterDelay = 1f;
-                canDropLetter = false;
-                break;
-        }
+    //public void GetLevelConfig(out int wordCount, out float wordDelay, out bool canDropWord, out int letterCount, out float letterDelay, out bool canDropLetter)
+    //{
+    //    print("GETLEVELCONFIG - level number = " + levelNumber);
+    //    switch (levelNumber)
+    //    {
+    //        case 1:
+    //            wordCount = 5;
+    //            wordDelay = 3f;
+    //            canDropWord = true;
+    //            letterCount = 1;
+    //            letterDelay = 1f;
+    //            canDropLetter = false;
+    //            break;
+    //        case 2:
+    //            wordCount = 2;
+    //            wordDelay = 0.5f;
+    //            canDropWord = true;
+    //            letterCount = 1;
+    //            letterDelay = 1f;
+    //            canDropLetter = false;
+    //            break;
+    //        default:
+    //            //print("DEFAULT");
+    //            wordCount = 2;
+    //            wordDelay = 10f;
+    //            canDropWord = true;
+    //            letterCount = 1;
+    //            letterDelay = 1f;
+    //            canDropLetter = false;
+    //            break;
+    //    }
 
 
-    }
+    //}
 
     public void SetScore(int i)
     {
@@ -270,12 +214,12 @@ public class GameManager : MonoBehaviour
     {
         return score;
     }
-    public void SetLives(int i)
-    {
-        lives = lives + i;
-    }
-    public int GetLives()
-    {
-        return lives;
-    }
+    //public void SetLives(int i)
+    //{
+    //    lives = lives + i;
+    //}
+    //public int GetLives()
+    //{
+    //    return lives;
+    //}
 }

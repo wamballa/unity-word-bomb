@@ -6,8 +6,8 @@ public class Explosion : MonoBehaviour
 {
 
     Collider2D[] inExplosionRadius = null;
-    [SerializeField] private float explosionForceMulti = 5;
-    [SerializeField] private float explosionRadius = 5;
+    //[SerializeField] private float explosionForceMulti = 5;
+    [SerializeField] private float explosionRadius = 2;
     [SerializeField] private LayerMask layerMask;
     // Explosion stuff
     [SerializeField] private AudioClip explodeClip;
@@ -25,20 +25,22 @@ public class Explosion : MonoBehaviour
     private void Update()
     {
         HandleExplosion();
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            PlaySFX();
-        }
     }
 
-
+    /// <summary>
+    /// Hides the letter
+    /// Plays an explosion sound
+    /// Spawns the explosion prefab animation
+    /// checks what objects in explosion radius
+    /// - explodes words and letters only
+    /// </summary>
     void HandleExplosion()
     {
         if (!canExplode) return;
         //print("EXPLODE "+transform.name);
         HideLetter();
         PlaySFX();
-        SpawnPrefab(transform.position, 30);
+        SpawnPrefab(transform.position, explosionRadius);
         inExplosionRadius = Physics2D.OverlapCircleAll(
             transform.position,
             explosionRadius,
@@ -47,59 +49,60 @@ public class Explosion : MonoBehaviour
 
         foreach (Collider2D o in inExplosionRadius)
         {
-            //print("Collided with " + o.transform.name);
-            //Rigidbody2D o_rb = o.GetComponent<Rigidbody2D>();
-            //if (o_rb != null)
-            //{
-            //    Vector2 dist = o.transform.position - transform.position;
-            //    if (dist.magnitude > 0)
-            //    {
-            //        float explosionForce = explosionForceMulti / dist.magnitude;
-            //        o_rb.AddForce(dist.normalized * explosionForce, ForceMode2D.Impulse);
-            //    }
-            //}
             Word w = o.transform.parent.GetComponent<Word>();
-            //w = o.transform.parent.GetComponent<Word>();
+
             if (w != null)
             {
                 w.SetWordHasBeenExploded();
-                //SpawnPrefab(o.transform.position, 10);
             }
             if (o.transform.CompareTag("ExplodedLetter"))
             {
                 Destroy(o.gameObject);
-                //SpawnPrefab(o.transform.position, 10);
             }
         }
-
         canExplode = false;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public void SetCanExplode()
     {
         canExplode = true;
     }
-
+    /// <summary>
+    /// Spawn the explosion animation with position and scale
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="scale"></param>
     void SpawnPrefab(Vector2 pos, float scale)
     {
 
         int rand = Random.Range(0, explosionsPF.Length-1);
         GameObject go = Instantiate(explosionsPF[rand], pos, Quaternion.identity);
-        go.transform.localScale = Vector2.one * scale;
+        go.transform.localScale = Vector2.one * scale * 3;
         Destroy(go, 1f);
         Destroy(transform.gameObject, 1f);
     }
-
+    /// <summary>
+    /// Play boom when word explodes
+    /// </summary>
     void PlaySFX()
     {
-        print("SAY BOOOOOM");
-        float rand = Random.Range(0.5f, 1.5f);
+        //print("SAY BOOOOOM");
+        float rand = Random.Range(0.8f, 1f);
         audioSource.pitch = rand;
         audioSource.PlayOneShot(explodeClip);
     }
+    /// <summary>
+    /// Hide the letter 
+    /// </summary>
     void HideLetter()
     {
         sprite.SetActive(false);
     }
+    /// <summary>
+    /// Set the explosion radius
+    /// </summary>
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, explosionRadius);

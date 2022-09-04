@@ -6,17 +6,27 @@ using UnityEngine;
 
 public class NativeKeyboardInput : MonoBehaviour
 {
-    public TMP_InputField MyInputfield;
+
+//#if UNITY_IOS
+
+    TMP_InputField MyInputfield;
     //public TMP_Text text;
     //TouchScreenKeyboard keyboard;
     WordManager wordManager;
 
+    /// <summary>
+    /// First things first
+    /// </summary>
+    private void Awake()
+    {
+        MyInputfield = GameObject.Find("NativeInputField").GetComponent<TMP_InputField>();
+        if (MyInputfield == null) Debug.LogError("ERROR: no input field found");
+    }
     void Start()
     {
         MyInputfield.onSubmit.AddListener(DoStuffWhenSubmitted);
         MyInputfield.onValueChanged.AddListener(DoStuffWhenValueChanged);
         MyInputfield.Select();
-        //keyboard.
 
         wordManager = GameObject.Find("WordManager").GetComponent<WordManager>();
         if (wordManager == null) print("ERROR: missing word manager");
@@ -40,12 +50,14 @@ public class NativeKeyboardInput : MonoBehaviour
         }
 
     }
+
     private void Update()
     {
         if (!MyInputfield.isFocused)
         {
-            print("LOST FOCUS");
+            //print("LOST FOCUS");
             MyInputfield.Select();
         }
     }
+//#endif
 }

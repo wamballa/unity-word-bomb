@@ -64,21 +64,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4b50a9ad13ef41a48188e7bf9334470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForceMulti: 5
-  explosionRadius: 5
+  explosionRadius: 0.5
   layerMask:
     serializedVersion: 2
     m_Bits: 1
   explodeClip: {fileID: 8300000, guid: 427c3f441bd374af987f56fb1c0ef94b, type: 3}
   explosionsPF:
   - {fileID: 7908454837571331772, guid: 1e63ad1cfbdf842da8778f37c07a1b10, type: 3}
-  - {fileID: 3737592370621799140, guid: fe251e90829b448da94bc128c1361600, type: 3}
-  - {fileID: 9003606892067503178, guid: 3d55b628923284268aec8ddd582063e1, type: 3}
-  - {fileID: 1115109226879417102, guid: 5bb9d57ad847c4caab75a81d2cb628a9, type: 3}
-  - {fileID: 5345358028972168028, guid: 85908cec956a84aa59b598476dcabf0f, type: 3}
-  - {fileID: 6472431961587220186, guid: 03d5865da6b3746639acdd263470d2bb, type: 3}
-  - {fileID: 6548798603034763713, guid: 354074033b7ec4715bea188505482b96, type: 3}
-  - {fileID: 7701839729726718551, guid: b43bbf4adcb564b218bbee5ebdd2777b, type: 3}
   - {fileID: 1781693541940118483, guid: cd2229ee6a31b4d958ad6a33e7cdce0a, type: 3}
   sprite: {fileID: 8088291047386358913}
 --- !u!82 &5897144223240149079
@@ -259,7 +251,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1919780429066290414
 MonoBehaviour:
@@ -367,7 +359,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.03223896, y: -0.02192247}
+  m_Offset: {x: 0.03390324, y: -0.026355036}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -378,7 +370,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.41055393, y: 0.40023732}
+  m_Size: {x: 0.43258286, y: 0.43775362}
   m_EdgeRadius: 0
 --- !u!50 &7881048396823079859
 Rigidbody2D:

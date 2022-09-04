@@ -144,6 +144,33 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bb181c1977cb1462d944f4b711bf1541, type: 3}
   - {fileID: 8300000, guid: 3e5e081d3cc5b4203b67ea234bd700f8, type: 3}
   - {fileID: 8300000, guid: af904617359ae458c87ddef5ae617243, type: 3}
+  alphabet:
+  - {fileID: 8300000, guid: 750a40d4cd42d46588297757b507c388, type: 3}
+  - {fileID: 8300000, guid: 93367564892354ffd8b9cf82947bb6e4, type: 3}
+  - {fileID: 8300000, guid: d631f065aa1dc418a90fe5bc395ca6df, type: 3}
+  - {fileID: 8300000, guid: 0b82f3158b6764c32978d868ca980f4f, type: 3}
+  - {fileID: 8300000, guid: f47361501dccc484ba7d986bb88fd677, type: 3}
+  - {fileID: 8300000, guid: 210042002285642b89d26c4a7b5a6c04, type: 3}
+  - {fileID: 8300000, guid: fbf8d9e3b252a46fb85e9ff78fc7d0e5, type: 3}
+  - {fileID: 8300000, guid: d2885e1ae042444aa97be4251fe1c972, type: 3}
+  - {fileID: 8300000, guid: 5b2286263bee2439ab16b4d9f54e1738, type: 3}
+  - {fileID: 8300000, guid: 0b42cd7df56ea43fb8140c9057430e60, type: 3}
+  - {fileID: 8300000, guid: 5992fc408454d4d4490c8fee03ef6f36, type: 3}
+  - {fileID: 8300000, guid: bde2fa8355d31416d8c6d5eafb1c6faf, type: 3}
+  - {fileID: 8300000, guid: 55170b9da0b0744d79276bc90afb146b, type: 3}
+  - {fileID: 8300000, guid: f2e1de5220ee74dc28429f932f3e4490, type: 3}
+  - {fileID: 8300000, guid: 0fa7a62b97fcc4111b879104d7dd2e0c, type: 3}
+  - {fileID: 8300000, guid: cdc180564670341b7bd4103313c5db56, type: 3}
+  - {fileID: 8300000, guid: b0b4e9c99917942f9abf7af76d886779, type: 3}
+  - {fileID: 8300000, guid: ab6bc806f269a4f67ad41b10123c8093, type: 3}
+  - {fileID: 8300000, guid: 6644d1f21de5042f6ac50dac51a19b93, type: 3}
+  - {fileID: 8300000, guid: f399285b94bff4c628c8feb0c17b8406, type: 3}
+  - {fileID: 8300000, guid: c12857d284f1f48169bdffa9ed81d9c3, type: 3}
+  - {fileID: 8300000, guid: cdf00d50dabff4dd2947167d0e96034c, type: 3}
+  - {fileID: 8300000, guid: b22dd5a3115fc4465a85d434079d8ea2, type: 3}
+  - {fileID: 8300000, guid: fbdffc79f8ff642dfac49732d5a7738f, type: 3}
+  - {fileID: 8300000, guid: 1255f7ba8e1fb4500a19ddd99f4b3de9, type: 3}
+  - {fileID: 8300000, guid: 58b6bd2307c6f4946bdb16c7845d2d1a, type: 3}
   vfxExplosion: {fileID: 7677723302219823008, guid: bc7571c22377a44feba6c1c9c3173077,
     type: 3}
 --- !u!82 &2918421451719996696
@@ -374,8 +401,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
-  m_fontSizeBase: 5
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 10

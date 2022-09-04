@@ -33,21 +33,16 @@ public class WordManager : MonoBehaviour
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        //lives = gameManager.GetLives();
-        //score = gameManager.GetScore();
-
     }
 
     private void Update()
     {
-        // Updates HUD stuff
-        // Removes words off screen
-        ShowNumberOfWords();
-        //ShowScore();
         RemoveWhenCrashed();
-        ShowWords();
     }
-
+    /// <summary>
+    /// Add a word to a list
+    /// </summary>
+    /// <param name="_word"></param>
     public void AddWord(GameObject _word)
     {
         //GameObject word = wordSpawner.SpawnWord();
@@ -69,7 +64,7 @@ public class WordManager : MonoBehaviour
         {
             if (activeWord.GetComponent<Word>().GetNextLetter() == typedLetter)
             {
-                activeWord.GetComponent<Word>().RemoveLetter();
+                activeWord.GetComponent<Word>().RemoveLetter(typedLetter);
             }
         }
         // WHEN KEYBOARD CHARACTER TYPED, SEE IF IT MATCHES FIRST LETTER
@@ -82,7 +77,7 @@ public class WordManager : MonoBehaviour
                 {
                     activeWord = words[i];
                     hasActiveWord = true;
-                    words[i].GetComponent<Word>().RemoveLetter();
+                    words[i].GetComponent<Word>().RemoveLetter(typedLetter);
                     break;
                 }
             }
@@ -116,18 +111,18 @@ public class WordManager : MonoBehaviour
         }
     }
 
-    void RemoveWordFromList()
-    {
-        for (int i = 0; i < words.Count; i++)
-        {
-            Word w = words[i].GetComponent<Word>();
+    //void RemoveWordFromList()
+    //{
+    //    for (int i = 0; i < words.Count; i++)
+    //    {
+    //        Word w = words[i].GetComponent<Word>();
 
-            if (activeWord = words[i])
-            {
-                print("Remove Word " + i);
-            }
-        }
-    }
+    //        if (activeWord = words[i])
+    //        {
+    //            print("Remove Word " + i);
+    //        }
+    //    }
+    //}
 
     public void RemoveWhenCrashed()
     {
@@ -183,15 +178,15 @@ public class WordManager : MonoBehaviour
     }
 
 
-    private void CheckIfAllDropped()
-    {
-        //Debug.Log("CHECK IF ALL WORDS DROPPED");
+    //private void CheckIfAllDropped()
+    //{
+    //    //Debug.Log("CHECK IF ALL WORDS DROPPED");
 
-        if (allWordsDropped && letters.Count == 0 && words.Count == 0)
-        {
-            Debug.Log("LEVEL COMPLETE");
-        }
-    }
+    //    if (allWordsDropped && letters.Count == 0 && words.Count == 0)
+    //    {
+    //        Debug.Log("LEVEL COMPLETE");
+    //    }
+    //}
 
     public void SetAllDropped(bool b)
     {
@@ -200,10 +195,10 @@ public class WordManager : MonoBehaviour
     }
 
 
-    void DecreaseLives()
-    {
-        gameManager.SetLives(-1);
-    }
+    //void DecreaseLives()
+    //{
+    //    gameManager.SetLives(-1);
+    //}
     void IncreaseScore()
     {
         gameManager.SetScore(1);
@@ -220,18 +215,18 @@ public class WordManager : MonoBehaviour
 
     //}
 
-    private void ShowNumberOfWords()
-    {
-        numberOfWords.text = words.Count.ToString();
-    }
-    private void ShowWords()
-    {
+    //private void ShowNumberOfWords()
+    //{
+    //    numberOfWords.text = words.Count.ToString();
+    //}
+    //private void ShowWords()
+    //{
 
-        //foreach(GameObject word in words)
-        //{
-        //    //scoreText.text = word.
-        //}
+    //    //foreach(GameObject word in words)
+    //    //{
+    //    //    //scoreText.text = word.
+    //    //}
 
-    }
+    //}
 
 }

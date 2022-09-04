@@ -20,6 +20,7 @@ public class Letter : MonoBehaviour
     Vector2 crashPos;
     public GameObject explodingLetterPF;
     private Rigidbody2D rigidBody;
+    bool canExplode = true;
 
     // Explosion
     [SerializeField] private Explosion explosionScript;
@@ -67,7 +68,7 @@ public class Letter : MonoBehaviour
         Vector2 rightEdge = Camera.main.ViewportToWorldPoint(rightPoint);
         float leftRange = leftEdge.x + halfLength;
         float rightRange = rightEdge.x - halfLength;
-        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 8.5f);
+        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 5.5f);
         transform.position = randomPosition;
     }
     private void SetLetter()
@@ -86,12 +87,12 @@ public class Letter : MonoBehaviour
     void HandleCrash()
     {
         if (!hasCrashed) return;
-        //print("Leter Crash "+letter);
+        if (!canExplode) return;
 
         GameObject go = Instantiate(explodingLetterPF, crashPos, Quaternion.identity);
         go.GetComponentInChildren<TMP_Text>().text = letter.ToString();
         go.GetComponentInChildren<TMP_Text>().color = Color.green;
-
+        canExplode = false;
     }
     void HandleMovement()
     {

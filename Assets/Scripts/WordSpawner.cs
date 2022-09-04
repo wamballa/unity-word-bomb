@@ -11,19 +11,9 @@ public class WordSpawner : MonoBehaviour {
 	private GameManager gameManager;
 
 	// Level constants
-	private int wordCount = 0;
-	private int letterCount = 0;
 	public float wordDelay = 5f;
 	private float nextWordTime = 0f;
 	private bool canDropWord = false;
-
-    // Counters and timers
-
-    //bool canDropLetterBomb = false;
-    private int _wordCounter = 0;
-    //private int _letterCounter = 0;
-    //private bool lastWordDropped = false;
-    private bool lastLetterDropped = false;
 
 	// Letter stuff
 	bool canDropLetter = false;
@@ -36,9 +26,9 @@ public class WordSpawner : MonoBehaviour {
 		if (gameManager == null) Debug.Log("ERROR");
 
 		canDropLetter = true;
-
 		canDropWord = true;
-		wordDelay = 1f;
+
+		//wordDelay = 1f;
 
 		//Get delay times
 		SetDelayTimes();
@@ -50,14 +40,20 @@ public class WordSpawner : MonoBehaviour {
     {
 		SpawnWord();
         SpawnLetter();
+		SetDelayTimes();
     }
 
+	/// <summary>
+    /// Get delay timers from GameManager
+    /// </summary>
 	public void SetDelayTimes()
     {
 		wordDelay = gameManager.GetFallDelayTime("word");
 		letterDelay = gameManager.GetFallDelayTime("letter");
 	}
-
+	/// <summary>
+    /// Spawns a word
+    /// </summary>
 	private void SpawnWord()
 	{
 		if (!canDropWord) return;
@@ -67,9 +63,13 @@ public class WordSpawner : MonoBehaviour {
 			//Debug.Log("DROP WORD");
 			wordManager.AddWord(GetWord());
 			nextWordTime = Time.time + wordDelay;
-			_wordCounter++;
+			//_wordCounter++;
 		}
 	}
+	/// <summary>
+    /// Gets the current word
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetWord()
     {
         Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), 7f);

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using MoreMountains.Feedbacks;
+using UnityEngine.Events;
 
 
 public class Word : MonoBehaviour {
@@ -18,10 +20,12 @@ public class Word : MonoBehaviour {
     private float fallSpeed;
     bool isOffScreen;
     bool hasCrashed;
-    //bool hasBeenTyped;
+    bool hasBeenTyped;
     bool wordHasExploded;
 
-    float CHAR_WIDTH = 0.5f;
+    const float CHAR_WIDTH = 0.3f;
+    const float DESTROY_WORD_TIMER = 1f;
+    const float HEIGHT_FROM_TOP = 0.5f;
     BoxCollider2D boxCollider;
 
     // LETTER STUFF
@@ -30,11 +34,14 @@ public class Word : MonoBehaviour {
     // SOUNDS STUFF
     public AudioClip[] audioClips;
     private AudioClip wordSFX;
+    public AudioClip[] alphabet;
     bool hasSpoken;
     AudioSource audioSource;
 
     // EXPLOSION STUFF
     public GameObject vfxExplosion;
+    bool canExplode = true;
+    [SerializeField] private MMFeedbacks cameraShakeFeedback;
 
 
     private void Start()
@@ -48,8 +55,6 @@ public class Word : MonoBehaviour {
 
         boxCollider = transform.GetComponentInChildren<BoxCollider2D>();
 
-
-
         SetStartXPositioon();
         SetText();
         SetBoxColliderWidth();
@@ -57,6 +62,11 @@ public class Word : MonoBehaviour {
         // Get fall speed
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (gameManager == null) print("ERROR: no game manager found");
+
+        // Get feedbacks
+        cameraShakeFeedback = GameObject.Find("CameraShakeFeedback").GetComponent<MMFeedbacks>();
+
+
         SetFallSpeed();
 
         SetAudio();
@@ -69,6 +79,9 @@ public class Word : MonoBehaviour {
         HandleExplosion();
         SpeakWord();
     }
+    /// <summary>
+    /// SPEAKS WORD
+    /// </summary>
     private void SpeakWord()
     {
         if (hasSpoken) return;
@@ -98,21 +111,28 @@ public class Word : MonoBehaviour {
     }
     private float GetBoxColliderWidth()
     {
-        print("WIDTH = " + boxCollider.size.x);
+        //print("WIDTH = " + boxCollider.size.x);
         return boxCollider.size.x;
     }
+    /// <summary>
+    /// Can the word be seen?
+    /// </summary>
+    /// <returns></returns>
     private bool IsVisible()
     {
         Vector2 topPoint = new Vector2(0, 1);
         Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
 
-        float topRange = topEdge.y - 0.5f;
+        float topRange = topEdge.y - HEIGHT_FROM_TOP;
         return transform.position.y < topRange ;
     }
     public void SetFallSpeed()
     {
         fallSpeed = gameManager.GetFallSpeed("word");
     }
+    /// <summary>
+    /// 
+    /// </summary>
     void SetStartXPositioon()
     {
         float halfLength = (_word.Length * CHAR_WIDTH)/2;
@@ -131,18 +151,26 @@ public class Word : MonoBehaviour {
         Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 7f);
         transform.position = randomPosition;
     }
+    /// <summary>
+    /// 
+    /// </summary>
     void HandleMovement()
     {
         if (hasCrashed) return;
         transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
     }
+    /// <summary>
+    /// HandleExplosion()
+    /// </summary>
     public void HandleExplosion()
     {
         if (!hasCrashed) return;
+        if (!canExplode) return;
 
+        canExplode = false;
         GameObject go;
 
-        float wordMidPoint = (_word.Length / 2) * 0.5f;
+        float wordMidPoint = (_word.Length / 2) * CHAR_WIDTH;
         float xStartPos = crashPos.x - wordMidPoint;
 
         for (int i=0; i < _word.Length; i++)
@@ -156,10 +184,10 @@ public class Word : MonoBehaviour {
             //go.GetComponentInChildren<Rigidbody2D>().AddForce(transform.up * FORCE);
             xStartPos += CHAR_WIDTH;
         }
-
-
-
     }
+    /// <summary>
+    /// Check if word has crashed into stuff
+    /// </summary>
     void CheckIfCrashed()
     {
         if (hasCrashed) return;
@@ -169,8 +197,7 @@ public class Word : MonoBehaviour {
 
     public bool HasWordBeenTyped()
     {
-        bool wordTyped = (typeIndex >= _word.Length);
-        return wordTyped;
+        return hasBeenTyped;
     }
 
     public void SetWordHasBeenExploded()
@@ -186,34 +213,53 @@ public class Word : MonoBehaviour {
     {
         return _word[typeIndex];
     }
-
-    //public void TypeLetter()
-    //{
-    //    typeIndex++;
-    //    RemoveLetter();
-    //}
-
-    public void RemoveLetter()
+    /// <summary>
+    /// Remove a letter from the word
+    /// If no letters left then start a coroutine
+    /// so WordManager doesnt kill the word before
+    /// the last letter spoken
+    /// </summary>
+    /// <param name="typedLetter"></param>
+    public void RemoveLetter(char typedLetter)
     {
-        //text.text = text.text.Remove(0, 1);
-        SpawnExplosion();
+        if (hasBeenTyped) return;
+        if (!IsVisible()) return;
 
+        SpawnExplosion();
+        print("cam shake = " + cameraShakeFeedback);
+        cameraShakeFeedback?.PlayFeedbacks();
+        SpeakLetter(typedLetter); 
         _word = _word.Remove(0, 1);
         text.color = Color.red;
         SetText();
         SetBoxColliderWidth();
+        if (_word.Length == 0)
+        {
+            //hasBeenTyped = true;
+            StartCoroutine(SetHasBeenTyped());
+        }
+    }
 
+    IEnumerator SetHasBeenTyped()
+    {
+        yield return new WaitForSeconds(0.5f);
+        hasBeenTyped = true;
+    }
+    void SpeakLetter(char typedLetter)
+    {
+        int index = (int)typedLetter % 32 -1;
+        //print("Letter " + typedLetter + " is index " + index);
+        audioSource.PlayOneShot(alphabet[index]);
     }
     private void SpawnExplosion()
     {
-        float wordMidPoint = (_word.Length / 2) * CHAR_WIDTH;
-        print("OFFSET = " + wordMidPoint);
+        //float wordMidPoint = (_word.Length / 2) * CHAR_WIDTH;
+        ////print("OFFSET = " + wordMidPoint);
 
-        float xStartPos = transform.position.x - wordMidPoint;
-        print("WORD START = " + xStartPos);
+        //float xStartPos = transform.position.x - wordMidPoint;
+        ////print("WORD START = " + xStartPos);
 
         float halfLength = (_word.Length * CHAR_WIDTH) / 2;
-
 
         float leftEdge = transform.position.x - (GetBoxColliderWidth() / 2);
         leftEdge = transform.position.x - halfLength;
