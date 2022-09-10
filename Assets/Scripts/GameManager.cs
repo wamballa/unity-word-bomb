@@ -12,8 +12,9 @@ public class GameManager : MonoBehaviour
     //private int lives = 100;
     //[SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text scoreText;
-    [SerializeField] private TMP_Text livesText;
-    //[SerializeField] private TMP_Text debugText;
+    //[SerializeField] private TMP_Text livesText;
+    [SerializeField] private WordSpawner wordSpawner;
+    [SerializeField] private LevelManager levelManager;
 
     // Global variables
     [Range(0, 10)]
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(CheckIfFull());
+        StartCoroutine(CheckForGameOver());
         StartCoroutine(FallDelayTimers());
     }
 
@@ -51,7 +52,13 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UpdateUI();
-        //CheckLives();
+        //DEBUG
+        if (Input.GetKeyDown(KeyCode.Period))
+        {
+            print("DeBUG - game over");
+            StopCoroutine(CheckForGameOver());
+            StartCoroutine(GameOver());
+        }
     }
     /// <summary>
     /// Speed up the fall speed periodically
@@ -64,9 +71,9 @@ public class GameManager : MonoBehaviour
         if (wordFallDelay < 0) wordFallDelay = 0;
         StartCoroutine(FallDelayTimers());
     }
-    IEnumerator CheckIfFull()
+    IEnumerator CheckForGameOver()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         /////////////////////////////////////////////////////////////////////
         //GameObjects [] go = Fin
         GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
@@ -84,11 +91,12 @@ public class GameManager : MonoBehaviour
         //print("Top Edge = " + topRange);
 
         if (highPoint > topRange) {
+            StopCoroutine(CheckForGameOver());
             StartCoroutine(GameOver());
         }
 
         //print("High Point " + highPoint);
-        StartCoroutine(CheckIfFull());
+        StartCoroutine(CheckForGameOver());
 
     }
 
@@ -130,15 +138,19 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameOver()
     {
+        // 
+        wordSpawner.SetSpawn(false);
         yield return new WaitForSeconds(1f);
-        int highscore = PlayerPrefs.GetInt("highscore");
-        if (score > highscore) SaveSettings();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        levelManager.SetGameOver();
+        SaveHighScore();
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    private void SaveSettings()
+    private void SaveHighScore()
     {
-        PlayerPrefs.SetInt("highscore", score);
+        int highscore = PlayerPrefs.GetInt("highscore");
+        if (score > highscore) PlayerPrefs.SetInt("highscore", score);
     }
 
     private void UpdateUI()

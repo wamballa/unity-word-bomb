@@ -17,7 +17,7 @@ public class AudioController : MonoBehaviour
     {
         LoadSettings();
         SetAudio();
-        InitiateToggle();
+        //InitiateToggle();
     }
     void LoadSettings()
     {
@@ -27,41 +27,41 @@ public class AudioController : MonoBehaviour
     void SetAudio()
     {
         float _vol = (isMuted ? -80f : 0f);
-        print("Volume = " + _vol );
+        //print("Volume = " + _vol );
         audioMixer.SetFloat(
             "MasterVolume",
             _vol
             );
     }
 
-    void InitiateToggle()
-    {
-        // update toggle
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            if (isMuted)
-            {
-                toggle.isOn = true;
-            }
-            else
-            {
-                toggle.isOn = false;
-            }
-            canUpdatePrefs = true;
-        }
-    }
+    //void InitiateToggle()
+    //{
+    //    // update toggle
+    //    if (SceneManager.GetActiveScene().buildIndex == 1)
+    //    {
+    //        if (isMuted)
+    //        {
+    //            toggle.isOn = true;
+    //        }
+    //        else
+    //        {
+    //            toggle.isOn = false;
+    //        }
+    //        canUpdatePrefs = true;
+    //    }
+    //}
 
-    public void ToggleIsMuted()
-    {
-        //print("can update " + canUpdatePrefs);
-        if (canUpdatePrefs)
-        {
-            isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
-            //print("is muted " + isMuted);
-            isMuted = !isMuted;
-            PlayerPrefs.SetInt("isMuted", (isMuted ? 1 : 0));
-            //print("Is mute = " + (PlayerPrefs.GetInt("isMuted") != 0));
-            SetAudio();
-        }
-    }
+    //public void ToggleIsMuted()
+    //{
+    //    //print("can update " + canUpdatePrefs);
+    //    if (canUpdatePrefs)
+    //    {
+    //        isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
+    //        //print("is muted " + isMuted);
+    //        isMuted = !isMuted;
+    //        PlayerPrefs.SetInt("isMuted", (isMuted ? 1 : 0));
+    //        //print("Is mute = " + (PlayerPrefs.GetInt("isMuted") != 0));
+    //        SetAudio();
+    //    }
+    //}
 }

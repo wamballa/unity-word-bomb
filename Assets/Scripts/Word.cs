@@ -226,7 +226,7 @@ public class Word : MonoBehaviour {
         if (!IsVisible()) return;
 
         SpawnExplosion();
-        print("cam shake = " + cameraShakeFeedback);
+        //print("cam shake = " + cameraShakeFeedback);
         cameraShakeFeedback?.PlayFeedbacks();
         SpeakLetter(typedLetter); 
         _word = _word.Remove(0, 1);

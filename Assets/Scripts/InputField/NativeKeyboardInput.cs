@@ -44,7 +44,7 @@ public class NativeKeyboardInput : MonoBehaviour
             //print("Input change = " + input);
             input = input.ToLower();
             char letter = input[0];
-            print("Input letter = " + letter);
+            //print("Input letter = " + letter);
             wordManager.TypeLetter(letter);
             MyInputfield.text = "";
         }

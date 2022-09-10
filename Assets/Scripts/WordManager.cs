@@ -133,6 +133,7 @@ public class WordManager : MonoBehaviour
 
             if (w.HasCrashed())
             {
+                print("Word HasCrashed");
                 //w.HandleExplosion();
                 Destroy(words[i]);
                 words.RemoveAt(i);
@@ -143,6 +144,7 @@ public class WordManager : MonoBehaviour
             }
             if (w.HasWordBeenTyped())
             {
+                print("Word HasWordBeenTyped");
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;
@@ -151,6 +153,7 @@ public class WordManager : MonoBehaviour
             }
             if (w.GetWordHasBeenExploded())
             {
+                print("Word GetWordHasBeenExploded");
                 Destroy(words[i]);
                 words.RemoveAt(i);
                 hasActiveWord = false;

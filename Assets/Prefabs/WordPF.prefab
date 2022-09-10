@@ -173,6 +173,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 58b6bd2307c6f4946bdb16c7845d2d1a, type: 3}
   vfxExplosion: {fileID: 7677723302219823008, guid: bc7571c22377a44feba6c1c9c3173077,
     type: 3}
+  cameraShakeFeedback: {fileID: 0}
 --- !u!82 &2918421451719996696
 AudioSource:
   m_ObjectHideFlags: 0
