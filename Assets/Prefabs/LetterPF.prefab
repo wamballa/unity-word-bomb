@@ -231,7 +231,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4809303274324532527, guid: 8823b8e1c95829f47aa72de0fe25c55a, type: 2}
+  - {fileID: -7255295171076407687, guid: 35f07f1fbdce3d545a8f603056d7a0ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -275,8 +275,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: A
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8823b8e1c95829f47aa72de0fe25c55a, type: 2}
-  m_sharedMaterial: {fileID: -4809303274324532527, guid: 8823b8e1c95829f47aa72de0fe25c55a,
+  m_fontAsset: {fileID: 11400000, guid: 35f07f1fbdce3d545a8f603056d7a0ce, type: 2}
+  m_sharedMaterial: {fileID: -7255295171076407687, guid: 35f07f1fbdce3d545a8f603056d7a0ce,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -359,7 +359,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.03390324, y: -0.026355036}
+  m_Offset: {x: -0.0066836476, y: 0.040493935}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -370,7 +370,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.43258286, y: 0.43775362}
+  m_Size: {x: 0.3100264, y: 0.35498822}
   m_EdgeRadius: 0
 --- !u!50 &7881048396823079859
 Rigidbody2D:

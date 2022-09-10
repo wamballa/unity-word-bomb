@@ -4342,7 +4342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3e25985d619411680201b0917105e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexColors: []
+  color: {r: 0, g: 0, b: 0, a: 0}
+  hexColors3: []
 --- !u!212 &1434628537
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -91,7 +91,7 @@ public class Letter : MonoBehaviour
 
         GameObject go = Instantiate(explodingLetterPF, crashPos, Quaternion.identity);
         go.GetComponentInChildren<TMP_Text>().text = letter.ToString();
-        go.GetComponentInChildren<TMP_Text>().color = Color.green;
+        go.GetComponentInChildren<TMP_Text>().color = Color.white;
         canExplode = false;
     }
     void HandleMovement()

@@ -23,7 +23,7 @@ public class Word : MonoBehaviour {
     bool hasBeenTyped;
     bool wordHasExploded;
 
-    const float CHAR_WIDTH = 0.3f;
+    const float CHAR_WIDTH = 0.2f;
     const float DESTROY_WORD_TIMER = 1f;
     const float HEIGHT_FROM_TOP = 0.5f;
     BoxCollider2D boxCollider;

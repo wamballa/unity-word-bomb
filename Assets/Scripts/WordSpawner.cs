@@ -97,4 +97,6 @@ public class WordSpawner : MonoBehaviour {
 		GameObject letterObj = Instantiate(letterPrefab, randomPosition, Quaternion.identity);
 		return letterObj;
 	}
+
+
 }
