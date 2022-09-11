@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using MoreMountains.Feedbacks;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+
+    // FEEDBACKS
+    [SerializeField] private MMFeedbacks highScoreFeedback;
 
     //public int levelNumber = 0;
     public int score;
@@ -43,6 +46,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        highScoreFeedback = GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>();
+        if (highScoreFeedback == null) Debug.LogError("ERROR: cant find High Score");
         StartCoroutine(CheckForGameOver());
         StartCoroutine(FallDelayTimers());
     }
@@ -143,14 +148,19 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         levelManager.SetGameOver();
         SaveHighScore();
-
+        highScoreFeedback?.PlayFeedbacks();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     private void SaveHighScore()
     {
         int highscore = PlayerPrefs.GetInt("highscore");
-        if (score > highscore) PlayerPrefs.SetInt("highscore", score);
+        if (score > highscore)
+        {
+            int delta = score - highscore;
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
+            PlayerPrefs.SetInt("highscore", score);
+        }
     }
 
     private void UpdateUI()

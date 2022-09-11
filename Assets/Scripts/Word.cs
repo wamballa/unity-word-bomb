@@ -135,7 +135,7 @@ public class Word : MonoBehaviour {
     /// </summary>
     void SetStartXPositioon()
     {
-        float halfLength = (_word.Length * CHAR_WIDTH)/2;
+        float halfLength = (_word.Length * (CHAR_WIDTH+0.1f))/2;
 
         Vector2 leftPoint = new Vector2(0, 0);
         Vector2 rightPoint = new Vector2(1, 0);

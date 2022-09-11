@@ -35,6 +35,7 @@ public class LevelManager : MonoBehaviour
     [Header("Used for Main Scene")]
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject highscoreTextObject;
     bool isGameOverOpen;
     bool isGameOver;
 
@@ -56,7 +57,7 @@ public class LevelManager : MonoBehaviour
                 //highscoreText = GameObject.Find("HighScoreValue").GetComponent<TMP_Text>();
                 optionsPanel.SetActive(false);
                 helpPanel.SetActive(false);
-                UpdateStartUI();
+                UpdateStartSceneUI();
                 break;
             case 1:
                 gameOverMenu.SetActive(false);
@@ -67,10 +68,7 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
-        if (isGameOver)
-        {
-            OpenGameOverMenu();
-        }
+            HandleGameOverUI();
     }
 
     public void GoToNextLevel()
@@ -87,7 +85,7 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene("Start");
     }
 
-    void UpdateStartUI()
+    void UpdateStartSceneUI()
     {
         highscoreText.text = highscore.ToString();
         // update toggle
@@ -170,14 +168,22 @@ public class LevelManager : MonoBehaviour
         isHelpOpen = false;
     }
 
-    private void OpenGameOverMenu()
+    private void HandleGameOverUI()
     {
+        if (!isGameOver) return;
         gameOverMenu.SetActive(true);
         restartButton.SetActive(true);
+        highscoreTextObject.SetActive(true);
     }
     
     public void SetGameOver()
     {
         isGameOver = true;
+    }
+    public void ClearHighScore()
+    {
+        highscore = 0;
+        PlayerPrefs.SetInt("highscore", 0);
+        UpdateStartSceneUI();
     }
 }
