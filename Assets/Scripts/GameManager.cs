@@ -34,26 +34,13 @@ public class GameManager : MonoBehaviour
     // Bools
     bool isGameOver = false;
 
-    private void Awake()
-    {
-        //DontDestroyOnLoad(this.gameObject);
-    }
-
-    //public string stringToEdit = "Hello World";
-    //private TouchScreenKeyboard keyboard;
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        highScoreFeedback = GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>();
-        if (highScoreFeedback == null) Debug.LogError("ERROR: cant find High Score");
+        //highScoreFeedback = GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>();
+        //if (highScoreFeedback == null) Debug.LogError("ERROR: cant find High Score");
         StartCoroutine(CheckForGameOver());
         StartCoroutine(FallDelayTimers());
     }
-
-
-    // Update is called once per frame
     void Update()
     {
         UpdateUI();
@@ -93,18 +80,12 @@ public class GameManager : MonoBehaviour
         Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
         float topRange = topEdge.y;
 
-        //print("Top Edge = " + topRange);
-
         if (highPoint > topRange) {
             StopCoroutine(CheckForGameOver());
             StartCoroutine(GameOver());
         }
-
-        //print("High Point " + highPoint);
         StartCoroutine(CheckForGameOver());
-
     }
-
 
     public float GetFallSpeed(string _type)
     {
@@ -136,10 +117,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    //public float GetFallDelay()
-    //{
-    //    return 1f;
-    //}
 
     private IEnumerator GameOver()
     {
@@ -147,8 +124,8 @@ public class GameManager : MonoBehaviour
         wordSpawner.SetSpawn(false);
         yield return new WaitForSeconds(1f);
         levelManager.SetGameOver();
-        SaveHighScore();
-        highScoreFeedback?.PlayFeedbacks();
+        //SaveHighScore();
+        //highScoreFeedback?.PlayFeedbacks();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -161,6 +138,10 @@ public class GameManager : MonoBehaviour
             GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
             PlayerPrefs.SetInt("highscore", score);
         }
+        else
+        {
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
+        }
     }
 
     private void UpdateUI()
@@ -169,65 +150,6 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
         //livesText.text = lives.ToString();
     }
-    //void CheckLives()
-    //{
-    //    if (!isGameOver)
-    //    {
-    //        if (lives == 0)
-    //        {
-    //            isGameOver = true;
-    //            CheckLives();
-    //            SceneManager.LoadScene("GameOver");
-    //        }
-    //    }
-    //}
-
-    //public void NextScene()
-    //{
-    //    levelNumber++;
-    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    //}
-
-    //public int GetLevelNumber()
-    //{
-    //    return levelNumber;
-    //}
-
-    //public void GetLevelConfig(out int wordCount, out float wordDelay, out bool canDropWord, out int letterCount, out float letterDelay, out bool canDropLetter)
-    //{
-    //    print("GETLEVELCONFIG - level number = " + levelNumber);
-    //    switch (levelNumber)
-    //    {
-    //        case 1:
-    //            wordCount = 5;
-    //            wordDelay = 3f;
-    //            canDropWord = true;
-    //            letterCount = 1;
-    //            letterDelay = 1f;
-    //            canDropLetter = false;
-    //            break;
-    //        case 2:
-    //            wordCount = 2;
-    //            wordDelay = 0.5f;
-    //            canDropWord = true;
-    //            letterCount = 1;
-    //            letterDelay = 1f;
-    //            canDropLetter = false;
-    //            break;
-    //        default:
-    //            //print("DEFAULT");
-    //            wordCount = 2;
-    //            wordDelay = 10f;
-    //            canDropWord = true;
-    //            letterCount = 1;
-    //            letterDelay = 1f;
-    //            canDropLetter = false;
-    //            break;
-    //    }
-
-
-    //}
-
     public void SetScore(int i)
     {
         score = score + i;
@@ -236,12 +158,4 @@ public class GameManager : MonoBehaviour
     {
         return score;
     }
-    //public void SetLives(int i)
-    //{
-    //    lives = lives + i;
-    //}
-    //public int GetLives()
-    //{
-    //    return lives;
-    //}
 }

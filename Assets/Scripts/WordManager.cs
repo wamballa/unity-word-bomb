@@ -21,14 +21,12 @@ public class WordManager : MonoBehaviour
     private bool hasActiveWord;
     private GameObject activeWord;
 
-    private bool canTypeWord = true;
+    //private bool canTypeWord = true;
+    //bool allWordsDropped = false;
 
-    //private int lives;
-    //private int score = 0;
+    // Keyboard stuff
+    [SerializeField] Keyboard keyboard;
 
-
-
-    bool allWordsDropped = false;
 
     private void Start()
     {
@@ -58,6 +56,10 @@ public class WordManager : MonoBehaviour
 
     public void TypeLetter(char typedLetter)
     {
+        typedLetter = char.ToLower(typedLetter);
+        print("WORD TYPED " + typedLetter);
+        print("has active = " + hasActiveWord);
+
         // WHEN KEYBOARD CHARACTER TYPED, CHECK IF IT'S THE FIRST LETTER OF A WORD
         // AND SET IT THE ACTIVE WORD
         if (hasActiveWord)
@@ -73,8 +75,10 @@ public class WordManager : MonoBehaviour
         {
             for (int i = 0; i < words.Count; i++)
             {
+                print("Next letter: word / letter " + words[i].name + " "+words[i].GetComponent<Word>().GetNextLetter());
                 if (words[i].GetComponent<Word>().GetNextLetter() == typedLetter)
                 {
+
                     activeWord = words[i];
                     hasActiveWord = true;
                     words[i].GetComponent<Word>().RemoveLetter(typedLetter);
@@ -110,19 +114,6 @@ public class WordManager : MonoBehaviour
             }
         }
     }
-
-    //void RemoveWordFromList()
-    //{
-    //    for (int i = 0; i < words.Count; i++)
-    //    {
-    //        Word w = words[i].GetComponent<Word>();
-
-    //        if (activeWord = words[i])
-    //        {
-    //            print("Remove Word " + i);
-    //        }
-    //    }
-    //}
 
     public void RemoveWhenCrashed()
     {
@@ -194,7 +185,7 @@ public class WordManager : MonoBehaviour
     public void SetAllDropped(bool b)
     {
         //Debug.Log("SET ALL DROPPED "+b);
-        allWordsDropped = b;
+        //allWordsDropped = b;
     }
 
 

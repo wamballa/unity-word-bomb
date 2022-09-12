@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using MoreMountains.Feedbacks;
 
 public class LevelManager : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("Used for both scenes")]
     [SerializeField] private GameObject optionsPanel;
+    private GameManager gameManager;
 
     private void Awake()
     {
@@ -49,6 +51,7 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
+
         LoadSettings();
 
         switch (sceneNumber)
@@ -60,6 +63,7 @@ public class LevelManager : MonoBehaviour
                 UpdateStartSceneUI();
                 break;
             case 1:
+                gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
                 gameOverMenu.SetActive(false);
                 restartButton.SetActive(false);
                 break;
@@ -174,6 +178,7 @@ public class LevelManager : MonoBehaviour
         gameOverMenu.SetActive(true);
         restartButton.SetActive(true);
         highscoreTextObject.SetActive(true);
+        SetHighScore();
     }
     
     public void SetGameOver()
@@ -185,5 +190,21 @@ public class LevelManager : MonoBehaviour
         highscore = 0;
         PlayerPrefs.SetInt("highscore", 0);
         UpdateStartSceneUI();
+    }
+    void SetHighScore()
+    {
+        int highscore = PlayerPrefs.GetInt("highscore");
+        int score = gameManager.GetScore();
+        if (score > highscore)
+        {
+            int delta = score - highscore;
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
+            PlayerPrefs.SetInt("highscore", score);
+        }
+        else
+        {
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
+        }
+        GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
     }
 }
