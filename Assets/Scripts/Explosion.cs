@@ -15,11 +15,14 @@ public class Explosion : MonoBehaviour
     [SerializeField] private GameObject[] explosionsPF;
     [SerializeField] private GameObject sprite;
 
+    Animator anim;
+
     bool canExplode;
 
     private void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
+        anim = gameObject.GetComponent<Animator>();
     }
 
     private void Update()
@@ -37,13 +40,14 @@ public class Explosion : MonoBehaviour
     void HandleExplosion()
     {
         if (!canExplode) return;
-        //print("EXPLODE "+transform.name);
+        // run animation
+        anim.SetBool("canExplode", true);
         HideLetter();
         PlaySFX();
-        SpawnPrefab(transform.position, explosionRadius);
+        //SpawnPrefab(transform.position, explosionRadius);
         inExplosionRadius = Physics2D.OverlapCircleAll(
             transform.position,
-            explosionRadius,
+            explosionRadius/2,
             layerMask
             );
 
@@ -105,7 +109,16 @@ public class Explosion : MonoBehaviour
     /// </summary>
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+        Gizmos.DrawWireSphere(transform.position, explosionRadius/2);
     }
-
+    public float GetRadius()
+    {
+        return explosionRadius;
+    }
+    public void AnimationComplete()
+    {
+        GameObject go = transform.GetComponentInChildren<SpriteRenderer>().gameObject;
+        Destroy(go);
+        Destroy(gameObject);
+    }
 }

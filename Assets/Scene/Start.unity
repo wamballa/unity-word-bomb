@@ -5049,17 +5049,17 @@ PrefabInstance:
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h1.b
-      value: 0.69411767
+      value: 0.4627451
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h1.g
-      value: 0.73333335
+      value: 0.39215687
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h1.r
-      value: 0.8745098
+      value: 0.9607843
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
@@ -5069,17 +5069,17 @@ PrefabInstance:
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h2.b
-      value: 0.4627451
+      value: 0.69411767
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h2.g
-      value: 0.39215687
+      value: 0.73333335
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}
       propertyPath: hexColors3.Array.data[2].h2.r
-      value: 0.9607843
+      value: 0.8745098
       objectReference: {fileID: 0}
     - target: {fileID: 7113274285406116580, guid: fec164abe91fc4acb9a836b2d762ec8f,
         type: 3}

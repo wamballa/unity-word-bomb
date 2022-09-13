@@ -14,6 +14,7 @@ public class WordSpawner : MonoBehaviour {
 	public float wordDelay = 5f;
 	private float nextWordTime = 0f;
 	private bool canSpawn = false;
+	private const float SPAWN_HEIGHT = 5.5f;
 
 	// Letter stuff
 	//bool canDropLetter = false;
@@ -77,7 +78,7 @@ public class WordSpawner : MonoBehaviour {
     /// <returns></returns>
     public GameObject GetWord()
     {
-        Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), 7f);
+        Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), SPAWN_HEIGHT);
         GameObject wordObj = Instantiate(wordPrefab, randomPosition, Quaternion.identity);
         return wordObj;
     }
@@ -93,7 +94,7 @@ public class WordSpawner : MonoBehaviour {
 	}
 	public GameObject GetLetter()
     {
-		Vector3 randomPosition = new Vector3(Random.Range(-6f, 6f), 7f);
+		Vector3 randomPosition = new Vector3(Random.Range(-6f, 6f), SPAWN_HEIGHT);
 		GameObject letterObj = Instantiate(letterPrefab, randomPosition, Quaternion.identity);
 		return letterObj;
 	}

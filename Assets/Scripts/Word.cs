@@ -148,7 +148,7 @@ public class Word : MonoBehaviour {
         //print("Left Range = " + leftRange);
         //print("Right Range = " + rightRange);
 
-        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 7f);
+        Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), transform.position.y);
         transform.position = randomPosition;
     }
     /// <summary>
