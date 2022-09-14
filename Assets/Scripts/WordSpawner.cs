@@ -17,7 +17,6 @@ public class WordSpawner : MonoBehaviour {
 	private const float SPAWN_HEIGHT = 5.5f;
 
 	// Letter stuff
-	//bool canDropLetter = false;
 	float letterDelay = 3f;
 	private float nextLetterTime = 0f;
 
@@ -26,15 +25,8 @@ public class WordSpawner : MonoBehaviour {
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		if (gameManager == null) Debug.Log("ERROR");
 
-		//canDropLetter = true;
 		SetSpawn(true);
-
-		//wordDelay = 1f;
-
-		//Get delay times
-		//SetDelayTimes();
-
-		nextLetterTime = Time.time + letterDelay;
+		nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 	}
 
     private void Update()
@@ -48,7 +40,6 @@ public class WordSpawner : MonoBehaviour {
     {
 		canSpawn = b;
     }
-
 	/// <summary>
     /// Get delay timers from GameManager
     /// </summary>
@@ -73,16 +64,9 @@ public class WordSpawner : MonoBehaviour {
 		}
 	}
 	/// <summary>
-    /// Gets the current word
-    /// </summary>
-    /// <returns></returns>
-    public GameObject GetWord()
-    {
-        Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), SPAWN_HEIGHT);
-        GameObject wordObj = Instantiate(wordPrefab, randomPosition, Quaternion.identity);
-        return wordObj;
-    }
-    private void SpawnLetter()
+	/// SpawnLetter
+	/// </summary>
+	private void SpawnLetter()
 	{
 		if (!canSpawn) return;
 
@@ -92,12 +76,21 @@ public class WordSpawner : MonoBehaviour {
 			nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 		}
 	}
+	/// <summary>
+	/// Gets the current word
+	/// </summary>
+	/// <returns></returns>
+	public GameObject GetWord()
+    {
+        Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), SPAWN_HEIGHT);
+        GameObject wordObj = Instantiate(wordPrefab, randomPosition, Quaternion.identity);
+        return wordObj;
+    }
+
 	public GameObject GetLetter()
     {
 		Vector3 randomPosition = new Vector3(Random.Range(-6f, 6f), SPAWN_HEIGHT);
 		GameObject letterObj = Instantiate(letterPrefab, randomPosition, Quaternion.identity);
 		return letterObj;
 	}
-
-
 }

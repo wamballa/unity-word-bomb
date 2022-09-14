@@ -221,4 +221,14 @@ public class LevelManager : MonoBehaviour
         restartButton.SetActive(false);
         SceneManager.LoadScene("Start");
     }
+    public void RateMyApp()
+    {
+#if UNITY_IOS
+        Application.OpenURL("market://details?id=com.trollugames.caverun3d");
+
+#endif
+
+
+    }
+
 }

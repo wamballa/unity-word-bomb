@@ -83,6 +83,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         /////////////////////////////////////////////////////////////////////
         //GameObjects [] go = Fin
+        print("% filled = " + GetPercentageFilled());
         GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
         float highPoint = 0;
         foreach(GameObject go in letters)
@@ -100,6 +101,29 @@ public class GameManager : MonoBehaviour
             StartCoroutine(GameOver());
         }
         StartCoroutine(CheckForGameOver());
+    }
+
+    private float GetPercentageFilled()
+    {
+        GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
+        print("Num exploded letters " + letters.Length);
+        float highPoint = 0;
+        foreach (GameObject go in letters)
+        {
+            if (go.transform.position.y > highPoint)
+                highPoint = go.transform.position.y;
+        }
+
+        // Get top edge
+        Vector2 topPoint = new Vector2(0, 1);
+        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
+        float topRange = topEdge.y;
+
+        print("topRange / highPoint " + topRange + " " + highPoint);
+
+        float percentageFilled = (highPoint / topRange) * 100;
+
+        return percentageFilled;
     }
 
     /// <summary>
@@ -153,6 +177,11 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
     public float GetFallDelayTime(string _type)
     {
         switch (_type)
@@ -174,18 +203,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    //private void SaveHighScore()
-    //{
-    //    int highscore = PlayerPrefs.GetInt("highscore");
-    //    if (score > highscore)
-    //    {
-    //        int delta = score - highscore;
-    //        GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
-    //        PlayerPrefs.SetInt("highscore", score);
-    //    }
-    //    else
-    //    {
-    //        GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
-    //    }
-    //}
+
+
+
 }

@@ -15,6 +15,7 @@ public class DrawExplosionCircle : MonoBehaviour
         explosionHandler = transform.GetComponent<Explosion>();
         explosionCircle = gameObject.GetComponentInChildren<SpriteRenderer>().transform;
         radius = explosionHandler.GetRadius();
+        float currentScale = transform.localScale.x;
         explosionCircle.localScale = new Vector2 (radius, radius);
     }
 
