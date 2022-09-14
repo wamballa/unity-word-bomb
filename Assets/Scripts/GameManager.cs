@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
 
     // FEEDBACKS
-    [SerializeField] private MMFeedbacks highScoreFeedback;
+    //[SerializeField] private MMFeedbacks highScoreFeedback;
 
     //public int levelNumber = 0;
     public int score;
@@ -20,16 +20,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LevelManager levelManager;
 
     // Global variables
-    [Range(0, 10)]
+    [Range(0, 20)]
     [SerializeField] private float wordFallSpeed = 1;
-    [Range(0, 10)]
+    [Range(0, 20)]
     [SerializeField] private float letterFallSpeed = 1;
-    [Range(0, 10)]
+    [Range(0, 20)]
     [SerializeField] private float wordFallDelay = 1;
-    [Range(0, 10)]
+    [Range(0, 20)]
     [SerializeField] private float letterFallDelay = 1;
 
-    [SerializeField] float FALL_TIMER = 2;
+    [SerializeField] float FALL_TIMER = 5;
 
     // Bools
     bool isGameOver = false;
@@ -41,6 +41,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine(CheckForGameOver());
         StartCoroutine(FallDelayTimers());
     }
+    /// <summary>
+    /// Update
+    /// </summary>
     void Update()
     {
         UpdateUI();
@@ -59,10 +62,22 @@ public class GameManager : MonoBehaviour
     private IEnumerator FallDelayTimers()
     {
         yield return new WaitForSeconds(FALL_TIMER);
-        wordFallDelay -= 0.5f;
-        if (wordFallDelay < 0) wordFallDelay = 0;
+        if (score > 10)
+        {
+            if (wordFallDelay > 2)
+            {
+                wordFallDelay -= 0.1f;
+                if (wordFallDelay < 0) wordFallDelay = 0;
+            }
+
+        }
+
         StartCoroutine(FallDelayTimers());
     }
+    /// <summary>
+    /// CheckForGameOver
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CheckForGameOver()
     {
         yield return new WaitForSeconds(0.5f);
@@ -87,6 +102,42 @@ public class GameManager : MonoBehaviour
         StartCoroutine(CheckForGameOver());
     }
 
+    /// <summary>
+    /// GameOver
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator GameOver()
+    {
+        // 
+        wordSpawner.SetSpawn(false);
+        yield return new WaitForSeconds(1f);
+        levelManager.SetGameOver();
+        //SaveHighScore();
+        //highScoreFeedback?.PlayFeedbacks();
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    /// <summary>
+    /// UpdateUI
+    /// </summary>
+    private void UpdateUI()
+    {
+        //levelText.text = levelNumber.ToString();
+        scoreText.text = score.ToString();
+        //livesText.text = lives.ToString();
+    }
+    public void SetScore(int i)
+    {
+        score = score + i;
+    }
+    public int GetScore()
+    {
+        return score;
+    }
+    /// <summary>
+    /// GetFallSpeed
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
     public float GetFallSpeed(string _type)
     {
         switch (_type)
@@ -102,60 +153,39 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    public float GetFallDelayTime (string _type)
+    public float GetFallDelayTime(string _type)
     {
         switch (_type)
         {
             case "word":
-                return wordFallDelay;
+                float r = Random.Range(0, 5);
+
+                r += wordFallDelay;
+                print("Word delay = " + r);
+                return r;
                 break;
             case "letter":
-                return letterFallDelay;
+                float rand = Random.Range(5, 10)+ letterFallDelay;
+                print("Letter delay = " + rand);
+                return rand;
                 break;
             default:
                 return 1f;
                 break;
         }
     }
-
-    private IEnumerator GameOver()
-    {
-        // 
-        wordSpawner.SetSpawn(false);
-        yield return new WaitForSeconds(1f);
-        levelManager.SetGameOver();
-        //SaveHighScore();
-        //highScoreFeedback?.PlayFeedbacks();
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
-    private void SaveHighScore()
-    {
-        int highscore = PlayerPrefs.GetInt("highscore");
-        if (score > highscore)
-        {
-            int delta = score - highscore;
-            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
-            PlayerPrefs.SetInt("highscore", score);
-        }
-        else
-        {
-            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
-        }
-    }
-
-    private void UpdateUI()
-    {
-        //levelText.text = levelNumber.ToString();
-        scoreText.text = score.ToString();
-        //livesText.text = lives.ToString();
-    }
-    public void SetScore(int i)
-    {
-        score = score + i;
-    }
-    public int GetScore()
-    {
-        return score;
-    }
+    //private void SaveHighScore()
+    //{
+    //    int highscore = PlayerPrefs.GetInt("highscore");
+    //    if (score > highscore)
+    //    {
+    //        int delta = score - highscore;
+    //        GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
+    //        PlayerPrefs.SetInt("highscore", score);
+    //    }
+    //    else
+    //    {
+    //        GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
+    //    }
+    //}
 }

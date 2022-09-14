@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject restartButton;
     [SerializeField] private GameObject highscoreTextObject;
-    bool isGameOverOpen;
+    bool hasHighScoreBeenSet;
     bool isGameOver;
 
     [Header("Used for both scenes")]
@@ -48,7 +48,9 @@ public class LevelManager : MonoBehaviour
     {
         sceneNumber = SceneManager.GetActiveScene().buildIndex;
     }
-
+    /// <summary>
+    /// Start
+    /// </summary>
     void Start()
     {
 
@@ -66,75 +68,76 @@ public class LevelManager : MonoBehaviour
                 gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
                 gameOverMenu.SetActive(false);
                 restartButton.SetActive(false);
+                highscoreTextObject.SetActive(false);
                 break;
         }
     }
-
+    /// <summary>
+    /// Update
+    /// </summary>
     private void Update()
     {
-            HandleGameOverUI();
+        HandleGameOverUI();
     }
 
-    public void GoToNextLevel()
-    {
-        if (isOptionsOpen) return;
-        if (isHelpOpen) return;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-    public void RestartGame()
+    /// <summary>
+    /// HandleGameOverUI
+    /// </summary>
+    private void HandleGameOverUI()
     {
-        gameOverMenu.SetActive(false);
-        restartButton.SetActive(false);
-        SceneManager.LoadScene("Start");
+        if (!isGameOver) return;
+        gameOverMenu.SetActive(true);
+        restartButton.SetActive(true);
+        highscoreTextObject.SetActive(true);
+        SetHighScore();
     }
+    /// <summary>
+    /// SetHighScore
+    /// </summary>
+    void SetHighScore()
+    {
+        if (hasHighScoreBeenSet) return;
+        hasHighScoreBeenSet = true;
+        int highscore = PlayerPrefs.GetInt("highscore");
+        int score = gameManager.GetScore();
 
-    void UpdateStartSceneUI()
-    {
-        highscoreText.text = highscore.ToString();
-        // update toggle
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        //print("Highscre = " + highscore);
+        //print("Score " + score);
+
+        GameObject.Find("HighScoreValue").GetComponent<TMP_Text>().text = highscore.ToString();
+
+
+        if (score > highscore)
         {
-            if (isMuted)
-            {
-                audioOff.SetActive(true);
-                audioOn.SetActive(false);
-            }
-            else
-            {
-                audioOff.SetActive(false);
-                audioOn.SetActive(true);
-            }
+            int delta = score - highscore;
+            highscore = score;
+            GameObject.Find("HighScoreValue").GetComponent<TMP_Text>().text = highscore.ToString();
+
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
+            PlayerPrefs.SetInt("highscore", score);
         }
-        canUpdatePrefs = true;
+        else
+        {
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
+        }
+        GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
     }
-
-    void LoadSettings()
+    /// <summary>
+    /// SetGameOver
+    /// </summary>
+    public void SetGameOver()
     {
-        highscore = PlayerPrefs.GetInt("highscore", 0);
-        isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
+        isGameOver = true;
     }
-
-    //public void ToggleIsMuted()
-    //{
-    //    if (canUpdatePrefs)
-    //    {
-    //        isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
-    //        print("is muted " + isMuted);
-    //        isMuted = !isMuted;
-    //        PlayerPrefs.SetInt("isMuted", (isMuted ? 1 : 0));
-    //        print("Is mute = " + (PlayerPrefs.GetInt("isMuted") != 0));
-    //    }
-    //}
-
-    public void OpenOptions()
+    /// <summary>
+    /// ClearHighScore
+    /// </summary>
+    public void ClearHighScore()
     {
-        print("OPEN OPTIONS");
-        if (isHelpOpen) return;
-        bool isEnabled = optionsPanel.activeSelf;
-        if (!isEnabled) optionsPanel.SetActive(true);
-        isOptionsOpen = true;
-
+        highscore = 0;
+        PlayerPrefs.SetInt("highscore", 0);
+        UpdateStartSceneUI();
     }
     public void CloseOptions()
     {
@@ -171,40 +174,51 @@ public class LevelManager : MonoBehaviour
         if (isEnabled) helpPanel.SetActive(false);
         isHelpOpen = false;
     }
+    void UpdateStartSceneUI()
+    {
+        highscoreText.text = highscore.ToString();
+        // update toggle
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            if (isMuted)
+            {
+                audioOff.SetActive(true);
+                audioOn.SetActive(false);
+            }
+            else
+            {
+                audioOff.SetActive(false);
+                audioOn.SetActive(true);
+            }
+        }
+        canUpdatePrefs = true;
+    }
 
-    private void HandleGameOverUI()
+    void LoadSettings()
     {
-        if (!isGameOver) return;
-        gameOverMenu.SetActive(true);
-        restartButton.SetActive(true);
-        highscoreTextObject.SetActive(true);
-        SetHighScore();
+        highscore = PlayerPrefs.GetInt("highscore", 0);
+        isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
     }
-    
-    public void SetGameOver()
+
+    public void OpenOptions()
     {
-        isGameOver = true;
+        print("OPEN OPTIONS");
+        if (isHelpOpen) return;
+        bool isEnabled = optionsPanel.activeSelf;
+        if (!isEnabled) optionsPanel.SetActive(true);
+        isOptionsOpen = true;
     }
-    public void ClearHighScore()
+    public void GoToNextLevel()
     {
-        highscore = 0;
-        PlayerPrefs.SetInt("highscore", 0);
-        UpdateStartSceneUI();
+        if (isOptionsOpen) return;
+        if (isHelpOpen) return;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-    void SetHighScore()
+    public void RestartGame()
     {
-        int highscore = PlayerPrefs.GetInt("highscore");
-        int score = gameManager.GetScore();
-        if (score > highscore)
-        {
-            int delta = score - highscore;
-            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "+ " + delta.ToString();
-            PlayerPrefs.SetInt("highscore", score);
-        }
-        else
-        {
-            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
-        }
-        GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
+        gameOverMenu.SetActive(false);
+        restartButton.SetActive(false);
+        SceneManager.LoadScene("Start");
     }
 }

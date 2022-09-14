@@ -9,7 +9,7 @@ public class WordManager : MonoBehaviour
     GameManager gameManager;
 
     // WORD stuff
-    public TMP_Text numberOfWords;
+    //public TMP_Text numberOfWords;
     //public TMP_Text scoreText;
     //public TMP_Text livesText;
 
@@ -78,7 +78,6 @@ public class WordManager : MonoBehaviour
                 print("Next letter: word / letter " + words[i].name + " "+words[i].GetComponent<Word>().GetNextLetter());
                 if (words[i].GetComponent<Word>().GetNextLetter() == typedLetter)
                 {
-
                     activeWord = words[i];
                     hasActiveWord = true;
                     words[i].GetComponent<Word>().RemoveLetter(typedLetter);
@@ -105,11 +104,9 @@ public class WordManager : MonoBehaviour
                 l.HandleExplosion();
                 //Destroy(letters[i]);
 
-
                 letters.RemoveAt(i);
 
-
-                gameManager.SetScore(+10);
+                gameManager.SetScore(+1);
                 //CheckIfAllDropped();
             }
         }
@@ -171,56 +168,14 @@ public class WordManager : MonoBehaviour
 
     }
 
-
-    //private void CheckIfAllDropped()
-    //{
-    //    //Debug.Log("CHECK IF ALL WORDS DROPPED");
-
-    //    if (allWordsDropped && letters.Count == 0 && words.Count == 0)
-    //    {
-    //        Debug.Log("LEVEL COMPLETE");
-    //    }
-    //}
-
     public void SetAllDropped(bool b)
     {
         //Debug.Log("SET ALL DROPPED "+b);
         //allWordsDropped = b;
     }
 
-
-    //void DecreaseLives()
-    //{
-    //    gameManager.SetLives(-1);
-    //}
     void IncreaseScore()
     {
         gameManager.SetScore(1);
     }
-
-    //private void ShowLives()
-    //{
-    //    livesText.text = gameManager.GetLives().ToString();
-    //}
-
-    //private void ShowScore()
-    //{
-    //    scoreText.text = gameManager.GetScore().ToString();
-
-    //}
-
-    //private void ShowNumberOfWords()
-    //{
-    //    numberOfWords.text = words.Count.ToString();
-    //}
-    //private void ShowWords()
-    //{
-
-    //    //foreach(GameObject word in words)
-    //    //{
-    //    //    //scoreText.text = word.
-    //    //}
-
-    //}
-
 }

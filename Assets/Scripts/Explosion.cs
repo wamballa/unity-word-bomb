@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-
+    GameManager gameManager;
     Collider2D[] inExplosionRadius = null;
     //[SerializeField] private float explosionForceMulti = 5;
     [SerializeField] private float explosionRadius = 2;
@@ -21,6 +21,8 @@ public class Explosion : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (gameManager == null) print("ERROR: game manager not found");
         audioSource = gameObject.GetComponent<AudioSource>();
         anim = gameObject.GetComponent<Animator>();
     }
@@ -57,10 +59,12 @@ public class Explosion : MonoBehaviour
 
             if (w != null)
             {
+                gameManager.SetScore(2);
                 w.SetWordHasBeenExploded();
             }
             if (o.transform.CompareTag("ExplodedLetter"))
             {
+                gameManager.SetScore(1);
                 Destroy(o.gameObject);
             }
         }

@@ -11,14 +11,14 @@ public class WordSpawner : MonoBehaviour {
 	private GameManager gameManager;
 
 	// Level constants
-	public float wordDelay = 5f;
+	float wordDelay = 5f;
 	private float nextWordTime = 0f;
 	private bool canSpawn = false;
 	private const float SPAWN_HEIGHT = 5.5f;
 
 	// Letter stuff
 	//bool canDropLetter = false;
-	public float letterDelay = 3f;
+	float letterDelay = 3f;
 	private float nextLetterTime = 0f;
 
 	private void Start()
@@ -32,7 +32,7 @@ public class WordSpawner : MonoBehaviour {
 		//wordDelay = 1f;
 
 		//Get delay times
-		SetDelayTimes();
+		//SetDelayTimes();
 
 		nextLetterTime = Time.time + letterDelay;
 	}
@@ -41,7 +41,7 @@ public class WordSpawner : MonoBehaviour {
     {
 		SpawnWord();
         SpawnLetter();
-		SetDelayTimes();
+		//SetDelayTimes();
     }
 
 	public void SetSpawn(bool b)
@@ -68,7 +68,7 @@ public class WordSpawner : MonoBehaviour {
 		{
 			//Debug.Log("DROP WORD");
 			wordManager.AddWord(GetWord());
-			nextWordTime = Time.time + wordDelay;
+			nextWordTime = Time.time + gameManager.GetFallDelayTime("word");
 			//_wordCounter++;
 		}
 	}
@@ -89,7 +89,7 @@ public class WordSpawner : MonoBehaviour {
 		if (Time.time >= nextLetterTime)
 		{
 			wordManager.AddLetter(GetLetter());
-			nextLetterTime = Time.time + letterDelay;
+			nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 		}
 	}
 	public GameObject GetLetter()
