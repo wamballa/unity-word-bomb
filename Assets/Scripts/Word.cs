@@ -23,7 +23,7 @@ public class Word : MonoBehaviour {
     bool hasBeenTyped;
     bool wordHasExploded;
 
-    const float CHAR_WIDTH = 0.2f;
+    const float CHAR_WIDTH = 0.3f;
     const float DESTROY_WORD_TIMER = 1f;
     const float HEIGHT_FROM_TOP = 0.5f;
     BoxCollider2D boxCollider;
@@ -43,9 +43,13 @@ public class Word : MonoBehaviour {
     bool canExplode = true;
     [SerializeField] private MMFeedbacks cameraShakeFeedback;
 
+    PlayAudio playAudio;
+
 
     private void Start()
     {
+        playAudio = transform.GetComponent<PlayAudio>();
+
         _word = WordGenerator.GetRandomWord();
         transform.name = _word;
 
@@ -226,9 +230,14 @@ public class Word : MonoBehaviour {
         if (!IsVisible()) return;
 
         SpawnExplosion();
-        //print("cam shake = " + cameraShakeFeedback);
         cameraShakeFeedback?.PlayFeedbacks();
-        SpeakLetter(typedLetter); 
+
+
+        playAudio.Play();
+
+        //SpeakLetter(typedLetter);
+
+
         _word = _word.Remove(0, 1);
         text.color = Color.red;
         SetText();

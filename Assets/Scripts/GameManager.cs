@@ -81,22 +81,8 @@ public class GameManager : MonoBehaviour
     IEnumerator CheckForGameOver()
     {
         yield return new WaitForSeconds(0.5f);
-        /////////////////////////////////////////////////////////////////////
-        //GameObjects [] go = Fin
-        print("% filled = " + GetPercentageFilled());
-        GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
-        float highPoint = 0;
-        foreach(GameObject go in letters)
-        {
-            if (go.transform.position.y > highPoint)
-                highPoint = go.transform.position.y;
-        }
 
-        Vector2 topPoint = new Vector2(0, 1);
-        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
-        float topRange = topEdge.y;
-
-        if (highPoint > topRange) {
+        if (GetPercentageFilled()>99) {
             StopCoroutine(CheckForGameOver());
             StartCoroutine(GameOver());
         }
@@ -105,24 +91,33 @@ public class GameManager : MonoBehaviour
 
     private float GetPercentageFilled()
     {
+        // LETTER HIGH POINT
         GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
-        print("Num exploded letters " + letters.Length);
+        //print("Num exploded letters " + letters.Length);
         float highPoint = 0;
+        float percentageFilled = 0;
         foreach (GameObject go in letters)
         {
             if (go.transform.position.y > highPoint)
                 highPoint = go.transform.position.y;
         }
 
-        // Get top edge
-        Vector2 topPoint = new Vector2(0, 1);
-        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
-        float topRange = topEdge.y;
+        if (letters.Length > 0)
+        {
+            // SCREEN TOP EDGE
+            Vector2 topPoint = new Vector2(0, 1);
+            Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
+            float screenTop = topEdge.y;
 
-        print("topRange / highPoint " + topRange + " " + highPoint);
+            // Get ground high point
+            float groundY = GameObject.Find("Ground").GetComponent<Transform>().position.y;
+            groundY += 0.25f;
 
-        float percentageFilled = (highPoint / topRange) * 100;
+            float height = screenTop - groundY;
+            float heapHeight = highPoint - groundY;
 
+            percentageFilled = (heapHeight / height) * 100;
+        }
         return percentageFilled;
     }
 

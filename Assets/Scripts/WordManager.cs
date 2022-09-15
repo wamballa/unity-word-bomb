@@ -57,8 +57,8 @@ public class WordManager : MonoBehaviour
     public void TypeLetter(char typedLetter)
     {
         typedLetter = char.ToLower(typedLetter);
-        print("WORD TYPED " + typedLetter);
-        print("has active = " + hasActiveWord);
+        //print("WORD TYPED " + typedLetter);
+        //print("has active = " + hasActiveWord);
 
         // WHEN KEYBOARD CHARACTER TYPED, CHECK IF IT'S THE FIRST LETTER OF A WORD
         // AND SET IT THE ACTIVE WORD
@@ -75,7 +75,7 @@ public class WordManager : MonoBehaviour
         {
             for (int i = 0; i < words.Count; i++)
             {
-                print("Next letter: word / letter " + words[i].name + " "+words[i].GetComponent<Word>().GetNextLetter());
+                //print("Next letter: word / letter " + words[i].name + " "+words[i].GetComponent<Word>().GetNextLetter());
                 if (words[i].GetComponent<Word>().GetNextLetter() == typedLetter)
                 {
                     activeWord = words[i];
@@ -163,9 +163,6 @@ public class WordManager : MonoBehaviour
             }
         }
         // check if all words done
-
-
-
     }
 
     public void SetAllDropped(bool b)

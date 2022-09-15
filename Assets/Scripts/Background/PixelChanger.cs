@@ -9,6 +9,7 @@ public class PixelChanger : MonoBehaviour
     public class HexColor
     {
         public Color h1;
+        public Color h1_5;
         public Color h2;
     }
     [SerializeField] HexColor[] hexColors3;

@@ -69,12 +69,18 @@ public class WordSpawner : MonoBehaviour {
 	private void SpawnLetter()
 	{
 		if (!canSpawn) return;
-
-		if (Time.time >= nextLetterTime)
-		{
+		float rand = Random.Range(0, 1000);
+		if (rand > 950)
+        {
 			wordManager.AddLetter(GetLetter());
 			nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 		}
+
+		//if (Time.time >= nextLetterTime)
+		//{
+		//	wordManager.AddLetter(GetLetter());
+		//	nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
+		//}
 	}
 	/// <summary>
 	/// Gets the current word
