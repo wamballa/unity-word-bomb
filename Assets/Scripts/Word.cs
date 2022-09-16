@@ -81,7 +81,7 @@ public class Word : MonoBehaviour {
         HandleMovement();
         CheckIfCrashed();
         HandleExplosion();
-        SpeakWord();
+        //SpeakWord();
     }
     /// <summary>
     /// SPEAKS WORD

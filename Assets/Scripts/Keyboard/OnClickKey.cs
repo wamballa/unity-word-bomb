@@ -25,7 +25,7 @@ public class OnClickKey : MonoBehaviour
 
     void RunThisTask()
     {
-        print("Button pressed was "+ GetLetter());
+        //print("Button pressed was "+ GetLetter());
         //wordManager.TypeLetter(GetLetter()[0], this);
         wordManager.TypeLetter(GetLetter()[0]);
     }

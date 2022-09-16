@@ -69,8 +69,14 @@ public class WordSpawner : MonoBehaviour {
 	private void SpawnLetter()
 	{
 		if (!canSpawn) return;
-		float rand = Random.Range(0, 1000);
-		if (rand > 950)
+		//float chanceInA = 1000;
+		//float probablilityPercent = 0.05f;
+
+		bool prob = Random.Range(0, 10000) > 99000 ? true : false;
+
+
+        //float rand = Random.Range(0, chanceInA);
+		if (prob)
         {
 			wordManager.AddLetter(GetLetter());
 			nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
