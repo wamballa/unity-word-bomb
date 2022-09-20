@@ -44,13 +44,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject optionsPanel;
     private GameManager gameManager;
 
+
     private void Awake()
     {
         sceneNumber = SceneManager.GetActiveScene().buildIndex;
     }
-    /// <summary>
-    /// Start
-    /// </summary>
+
+    
     void Start()
     {
 
@@ -66,24 +66,22 @@ public class LevelManager : MonoBehaviour
                 break;
             case 1:
                 gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
                 gameOverMenu.SetActive(false);
                 restartButton.SetActive(false);
                 highscoreTextObject.SetActive(false);
+                GameObject.Find("UIAppear").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
                 break;
         }
     }
-    /// <summary>
-    /// Update
-    /// </summary>
+
+
     private void Update()
     {
         HandleGameOverUI();
     }
 
 
-    /// <summary>
-    /// HandleGameOverUI
-    /// </summary>
     private void HandleGameOverUI()
     {
         if (!isGameOver) return;
@@ -92,9 +90,8 @@ public class LevelManager : MonoBehaviour
         highscoreTextObject.SetActive(true);
         SetHighScore();
     }
-    /// <summary>
-    /// SetHighScore
-    /// </summary>
+
+
     void SetHighScore()
     {
         if (hasHighScoreBeenSet) return;
@@ -123,28 +120,30 @@ public class LevelManager : MonoBehaviour
         }
         GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
     }
-    /// <summary>
-    /// SetGameOver
-    /// </summary>
+
+
     public void SetGameOver()
     {
         isGameOver = true;
     }
-    /// <summary>
-    /// ClearHighScore
-    /// </summary>
+
+
     public void ClearHighScore()
     {
         highscore = 0;
         PlayerPrefs.SetInt("highscore", 0);
         UpdateStartSceneUI();
     }
+
+
     public void CloseOptions()
     {
         bool isEnabled = optionsPanel.activeSelf;
         if (isEnabled) optionsPanel.SetActive(false);
         isOptionsOpen = false;
     }
+
+
     public void ToggleMute()
     {
         isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
@@ -161,6 +160,8 @@ public class LevelManager : MonoBehaviour
             audioOn.SetActive(true);
         }
     }
+
+
     public void OpenHelpMenu()
     {
         if (isOptionsOpen) return;
@@ -168,12 +169,16 @@ public class LevelManager : MonoBehaviour
         if (!isEnabled) helpPanel.SetActive(true);
         isHelpOpen = true;
     }
+
+
     public void CloseHelpMenu()
     {
         bool isEnabled = helpPanel.activeSelf;
         if (isEnabled) helpPanel.SetActive(false);
         isHelpOpen = false;
     }
+
+
     void UpdateStartSceneUI()
     {
         highscoreText.text = highscore.ToString();
@@ -194,6 +199,7 @@ public class LevelManager : MonoBehaviour
         canUpdatePrefs = true;
     }
 
+
     void LoadSettings()
     {
         highscore = PlayerPrefs.GetInt("highscore", 0);
@@ -208,6 +214,8 @@ public class LevelManager : MonoBehaviour
         if (!isEnabled) optionsPanel.SetActive(true);
         isOptionsOpen = true;
     }
+
+
     public void GoToNextLevel()
     {
         if (isOptionsOpen) return;
@@ -215,12 +223,16 @@ public class LevelManager : MonoBehaviour
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+
     public void RestartGame()
     {
         gameOverMenu.SetActive(false);
         restartButton.SetActive(false);
         SceneManager.LoadScene("Start");
     }
+
+
     public void RateMyApp()
     {
 #if UNITY_IOS

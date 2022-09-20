@@ -32,19 +32,15 @@ public class Explosion : MonoBehaviour
         HandleExplosion();
     }
 
-    /// <summary>
-    /// Hides the letter
-    /// Plays an explosion sound
-    /// Spawns the explosion prefab animation
-    /// checks what objects in explosion radius
-    /// - explodes words and letters only
-    /// </summary>
+
     void HandleExplosion()
     {
         if (!canExplode) return;
         // run animation
         anim.SetBool("canExplode", true);
-        HideLetter();
+
+        //HideLetter();
+
         PlaySFX();
         //SpawnPrefab(transform.position, explosionRadius);
         inExplosionRadius = Physics2D.OverlapCircleAll(
@@ -55,13 +51,18 @@ public class Explosion : MonoBehaviour
 
         foreach (Collider2D o in inExplosionRadius)
         {
-            Word w = o.transform.parent.GetComponent<Word>();
+            //Word w = o.transform.parent.GetComponent<Word>();
+            //Word gw = o.gameObject.GetComponentInParent<Word>();
 
-            if (w != null)
+            //if (w != null)
+            //if (o.gameObject.GetComponent<Word>() != null)
+            if (o.transform.CompareTag("Word"))
             {
+                //print("Word object called name " + o.name);
                 gameManager.SetScore(2);
-                w.SetWordHasBeenExploded();
+                o.transform.GetComponent<Word>().SetWordHasBeenExploded();
             }
+
             if (o.transform.CompareTag("ExplodedLetter"))
             {
                 gameManager.SetScore(1);
@@ -70,18 +71,14 @@ public class Explosion : MonoBehaviour
         }
         canExplode = false;
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
+
     public void SetCanExplode()
     {
         canExplode = true;
     }
-    /// <summary>
-    /// Spawn the explosion animation with position and scale
-    /// </summary>
-    /// <param name="pos"></param>
-    /// <param name="scale"></param>
+
+
     void SpawnPrefab(Vector2 pos, float scale)
     {
 
@@ -91,9 +88,8 @@ public class Explosion : MonoBehaviour
         Destroy(go, 1f);
         Destroy(transform.gameObject, 1f);
     }
-    /// <summary>
-    /// Play boom when word explodes
-    /// </summary>
+
+
     void PlaySFX()
     {
         //print("SAY BOOOOOM");
@@ -101,24 +97,26 @@ public class Explosion : MonoBehaviour
         audioSource.pitch = rand;
         audioSource.PlayOneShot(explodeClip);
     }
-    /// <summary>
-    /// Hide the letter 
-    /// </summary>
+
+
     void HideLetter()
     {
         sprite.SetActive(false);
     }
-    /// <summary>
-    /// Set the explosion radius
-    /// </summary>
+
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, explosionRadius/2);
     }
+
+
     public float GetRadius()
     {
         return explosionRadius;
     }
+
+
     public void AnimationComplete()
     {
         GameObject go = transform.GetComponentInChildren<SpriteRenderer>().gameObject;

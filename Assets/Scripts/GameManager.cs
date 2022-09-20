@@ -7,8 +7,10 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-    // FEEDBACKS
-    //[SerializeField] private MMFeedbacks highScoreFeedback;
+    #region VARIABLES
+
+    // GAME TIMER
+    float startTime;
 
     //public int levelNumber = 0;
     public int score;
@@ -28,79 +30,212 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float wordFallDelay = 1;
     [Range(0, 20)]
     [SerializeField] private float letterFallDelay = 1;
+    [Header("How much to increase the words spawning frequency")]
+    [SerializeField] float wordDelayDecrement = 0.2f;
+    [Header("How much to increase the LETTERS spawning frequency")]
+    [SerializeField] float letterDelayDecrement = 0.1f;
+    [Header("How much to increase the word speed")]
+    [SerializeField] float wordSpeedIncrement = 0.2f;
+    [Header("The duration between each difficulty levels")]
+    [SerializeField] float difficultyDuration = 20f;
 
-    [SerializeField] float FALL_TIMER = 5;
+    int wordDifficultyLevel = 3;
 
-    // Bools
-    bool isGameOver = false;
+
+    #endregion
 
     void Start()
     {
-        //highScoreFeedback = GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>();
-        //if (highScoreFeedback == null) Debug.LogError("ERROR: cant find High Score");
-        StartCoroutine(CheckForGameOver());
-        StartCoroutine(FallDelayTimers());
+        Initialise();
     }
-    /// <summary>
-    /// Update
-    /// </summary>
+
+
+    void Initialise()
+    {
+        startTime = Time.time;
+        StartCoroutine(CheckForGameOver());
+        StartCoroutine(SetDifficultyLevels());
+    }
+
+
     void Update()
     {
         UpdateUI();
-        //DEBUG
-        if (Input.GetKeyDown(KeyCode.Period))
+        CheckToReduceWordDifficulty();
+
+
+        // debug
+        if (Input.GetKeyUp(KeyCode.Tab))
         {
-            print("DeBUG - game over");
-            StopCoroutine(CheckForGameOver());
-            StartCoroutine(GameOver());
+            print("DEBUG");
+            SetGroundScale();
         }
     }
-    /// <summary>
-    /// Speed up the fall speed periodically
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator FallDelayTimers()
+
+
+    void CheckToReduceWordDifficulty()
     {
-        yield return new WaitForSeconds(FALL_TIMER);
-        if (score > 10)
+        if (GetPercentageFilled() > 80)
         {
-            if (wordFallDelay > 2)
-            {
-                wordFallDelay -= 0.1f;
-                if (wordFallDelay < 0) wordFallDelay = 0;
-            }
-
+            print("reset world difficulty to 3");
+            wordDifficultyLevel = 3;
         }
-
-        StartCoroutine(FallDelayTimers());
     }
-    /// <summary>
-    /// CheckForGameOver
-    /// </summary>
-    /// <returns></returns>
+
+    // GETTERS & SETTERS
+
+    #region
+
+    ///// GETTERS /////
+    
+
+    public int GetWordDifficultyLevel()
+    {
+        return wordDifficultyLevel;
+    }
+
+
+    public float GetFallSpeed(string _type)
+    {
+        switch (_type)
+        {
+            case "word":
+                return wordFallSpeed;
+                break;
+            case "letter":
+                return letterFallSpeed;
+                break;
+            default:
+                return 1f;
+                break;
+        }
+    }
+
+
+    public float GetFallDelayTime(string _type)
+    {
+        switch (_type)
+        {
+            case "word":
+                return wordFallDelay;
+                break;
+            case "letter":
+                float rand = Random.Range(2, 4) + letterFallDelay;
+                //print("Letter delay = " + rand);
+                return rand;
+                break;
+            default:
+                return 1f;
+                break;
+        }
+    }
+
+
+    public int GetScore()
+    {
+        return score;
+    }
+
+
+    ///// SETTERS /////
+
+
+    IEnumerator SetDifficultyLevels()
+    {
+        yield return new WaitForSeconds(difficultyDuration);
+        SetFallDelay();
+        SetWordDifficulty();
+        SetFallSpeed();
+        SetGroundScale();
+        StartCoroutine(SetDifficultyLevels());
+    }
+
+
+    public void SetFallSpeed()
+    {
+        if (wordFallSpeed < .8 ) wordFallSpeed += wordSpeedIncrement;
+        //print("Fall Speed = " + wordFallSpeed);
+    }
+
+
+    private void SetFallDelay()
+    {
+        if (wordFallDelay > 2) wordFallDelay -= wordDelayDecrement;
+        if (letterFallDelay > 2) letterFallDelay -= letterDelayDecrement;
+        //print("////////////////////////////////");
+        //print("Fall Delay = " + wordFallDelay);
+
+    }
+
+
+    private void SetWordDifficulty()
+    {
+        if (wordDifficultyLevel < 7) wordDifficultyLevel++;
+        //print("Word Difficulty = " + wordDifficultyLevel);
+    }
+
+
+    private void SetGroundScale()
+    {
+        GameObject.Find("GroundScale").GetComponent<MMFeedbacks>().PlayFeedbacks();
+    }
+
+
+    public void SetScore(int i)
+    {
+        score = score + i;
+    }
+
+
+    #endregion
+
+
+    //\\\ SETTERS \\\\\
+
+
     IEnumerator CheckForGameOver()
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (GetPercentageFilled()>99) {
+        if (GetPercentageFilled() > 99)
+        {
             StopCoroutine(CheckForGameOver());
             StartCoroutine(GameOver());
+            StopCoroutine(SetDifficultyLevels());
         }
         StartCoroutine(CheckForGameOver());
     }
 
+
+    private IEnumerator GameOver()
+    {
+        // 
+        wordSpawner.SetSpawn(false);
+        yield return new WaitForSeconds(1f);
+        levelManager.SetGameOver();
+    }
+
+
+    private void UpdateUI()
+    {
+        scoreText.text = score.ToString();
+    }
+
+
     private float GetPercentageFilled()
     {
-        // LETTER HIGH POINT
+        // Get LETTER HIGH POINT
         GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
-        //print("Num exploded letters " + letters.Length);
         float highPoint = 0;
-        float percentageFilled = 0;
+
         foreach (GameObject go in letters)
         {
             if (go.transform.position.y > highPoint)
                 highPoint = go.transform.position.y;
         }
+
+        // Calculate screen heigh
+        float percentageFilled = 0;
 
         if (letters.Length > 0)
         {
@@ -121,83 +256,7 @@ public class GameManager : MonoBehaviour
         return percentageFilled;
     }
 
-    /// <summary>
-    /// GameOver
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator GameOver()
-    {
-        // 
-        wordSpawner.SetSpawn(false);
-        yield return new WaitForSeconds(1f);
-        levelManager.SetGameOver();
-        //SaveHighScore();
-        //highScoreFeedback?.PlayFeedbacks();
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-    /// <summary>
-    /// UpdateUI
-    /// </summary>
-    private void UpdateUI()
-    {
-        //levelText.text = levelNumber.ToString();
-        scoreText.text = score.ToString();
-        //livesText.text = lives.ToString();
-    }
-    public void SetScore(int i)
-    {
-        score = score + i;
-    }
-    public int GetScore()
-    {
-        return score;
-    }
-    /// <summary>
-    /// GetFallSpeed
-    /// </summary>
-    /// <param name="_type"></param>
-    /// <returns></returns>
-    public float GetFallSpeed(string _type)
-    {
-        switch (_type)
-        {
-            case "word":
-                return wordFallSpeed;
-                break;
-            case "letter":
-                return letterFallSpeed;
-                break;
-            default:
-                return 1f;
-                break;
-        }
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="_type"></param>
-    /// <returns></returns>
-    public float GetFallDelayTime(string _type)
-    {
-        switch (_type)
-        {
-            case "word":
-                float r = Random.Range(0, 5);
 
-                r += wordFallDelay;
-                print("Word delay = " + r);
-                return r;
-                break;
-            case "letter":
-                float rand = Random.Range(5, 10)+ letterFallDelay;
-                print("Letter delay = " + rand);
-                return rand;
-                break;
-            default:
-                return 1f;
-                break;
-        }
-    }
 
 
 

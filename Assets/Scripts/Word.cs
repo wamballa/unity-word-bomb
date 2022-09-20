@@ -14,7 +14,7 @@ public class Word : MonoBehaviour {
     private string _word;
     private int typeIndex;
     public TMP_Text text;
-    public CollisionHandler collisionHandler;
+    private CollisionHandler collisionHandler;
     public GameObject explodingPF;
     private Vector2 crashPos;
     private float fallSpeed;
@@ -25,7 +25,7 @@ public class Word : MonoBehaviour {
 
     const float CHAR_WIDTH = 0.3f;
     const float DESTROY_WORD_TIMER = 1f;
-    const float HEIGHT_FROM_TOP = 0.5f;
+    const float HEIGHT_FROM_TOP = 0.1f;
     BoxCollider2D boxCollider;
 
     // LETTER STUFF
@@ -48,31 +48,34 @@ public class Word : MonoBehaviour {
 
     private void Start()
     {
-        playAudio = transform.GetComponent<PlayAudio>();
+        Initialise();
+    }
 
-        _word = WordGenerator.GetRandomWord();
-        transform.name = _word;
 
-        audioSource = gameObject.GetComponent < AudioSource >();
-
-        _char = LetterGenerator.GetRandomLetter();
-
-        boxCollider = transform.GetComponentInChildren<BoxCollider2D>();
-
-        SetStartXPositioon();
-        SetText();
-        SetBoxColliderWidth();
-
+    void Initialise()
+    {
         // Get fall speed
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (gameManager == null) print("ERROR: no game manager found");
+        playAudio = transform.GetComponent<PlayAudio>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+
 
         // Get feedbacks
         cameraShakeFeedback = GameObject.Find("CameraShakeFeedback").GetComponent<MMFeedbacks>();
 
+        boxCollider = transform.GetComponent<BoxCollider2D>();
+        if (boxCollider == null) print("ERROR: no box collider");
 
+        collisionHandler = transform.GetComponent<CollisionHandler>();
+        if (collisionHandler == null) print("ERROR: no collision handler");
+
+        SetWord();
+        SetLetter();
+        SetStartXPositioon();
+        SetText();
+        SetBoxColliderWidth();
         SetFallSpeed();
-
         SetAudio();
     }
 
@@ -82,24 +85,29 @@ public class Word : MonoBehaviour {
         CheckIfCrashed();
         HandleExplosion();
         //SpeakWord();
+        CheckIfOffScreen();
     }
-    /// <summary>
-    /// SPEAKS WORD
-    /// </summary>
-    private void SpeakWord()
-    {
-        if (hasSpoken) return;
 
-        if (IsVisible())
-        {
-            //print(transform.name + " is visible");
-            audioSource.PlayOneShot(wordSFX);
-            hasSpoken = true;
-        }
+    #region SETTERS
+
+
+    void SetWord()
+    {
+
+        _word = WordGenerator.GetRandomWord(gameManager.GetWordDifficultyLevel());
+        transform.name = _word;
     }
+
+
+    void SetLetter()
+    {
+        _char = LetterGenerator.GetRandomLetter();
+    }
+
+
     private void SetAudio()
     {
-        for (int i=0; i< audioClips.Length; i++)
+        for (int i = 0; i < audioClips.Length; i++)
         {
             if (audioClips[i].name == _word)
             {
@@ -109,37 +117,23 @@ public class Word : MonoBehaviour {
         // DEBUG
         if (wordSFX == null) wordSFX = audioClips[0];
     }
+
+
     private void SetBoxColliderWidth()
     {
         boxCollider.size = new Vector2(_word.Length * CHAR_WIDTH, boxCollider.size.y);
     }
-    private float GetBoxColliderWidth()
-    {
-        //print("WIDTH = " + boxCollider.size.x);
-        return boxCollider.size.x;
-    }
-    /// <summary>
-    /// Can the word be seen?
-    /// </summary>
-    /// <returns></returns>
-    private bool IsVisible()
-    {
-        Vector2 topPoint = new Vector2(0, 1);
-        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
 
-        float topRange = topEdge.y - HEIGHT_FROM_TOP;
-        return transform.position.y < topRange ;
-    }
+
     public void SetFallSpeed()
     {
         fallSpeed = gameManager.GetFallSpeed("word");
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
+
     void SetStartXPositioon()
     {
-        float halfLength = (_word.Length * (CHAR_WIDTH+0.1f))/2;
+        float halfLength = (_word.Length * (CHAR_WIDTH + 0.1f)) / 2;
 
         Vector2 leftPoint = new Vector2(0, 0);
         Vector2 rightPoint = new Vector2(1, 0);
@@ -155,17 +149,81 @@ public class Word : MonoBehaviour {
         Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), transform.position.y);
         transform.position = randomPosition;
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
+
+    public void SetWordHasBeenExploded()
+    {
+        wordHasExploded = true;
+    }
+
+
+    private void SetText()
+    {
+        text.text = _word;
+    }
+
+
+    void SetHasBeenTyped()
+    {
+        hasBeenTyped = true;
+    }
+
+    #endregion
+
+
+    #region GETTERS
+
+
+    private float GetBoxColliderWidth()
+    {
+        //print("WIDTH = " + boxCollider.size.x);
+        return boxCollider.size.x;
+    }
+
+
+    public bool GetWordHasBeenExploded()
+    {
+        return wordHasExploded;
+    }
+
+
+    public char GetNextLetter()
+    {
+        return _word[typeIndex];
+    }
+
+
+    public string GetWord()
+    {
+        return _word;
+    }
+
+
+    #endregion
+
+
+    void CheckIfOffScreen()
+    {
+        if (isOffScreen) return;
+        if (transform.position.y < -5.5f) isOffScreen = true;
+    }
+
+
     void HandleMovement()
     {
         if (hasCrashed) return;
         transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
     }
-    /// <summary>
-    /// HandleExplosion()
-    /// </summary>
+
+
+    void CheckIfCrashed()
+    {
+        if (hasCrashed) return;
+        hasCrashed = collisionHandler.HasCrashed();
+        crashPos = transform.position;
+    }
+
+
     public void HandleExplosion()
     {
         if (!hasCrashed) return;
@@ -179,51 +237,21 @@ public class Word : MonoBehaviour {
 
         for (int i=0; i < _word.Length; i++)
         {
-            //print(i + " " + _word[i]);
-
-            //Vector2 newPos = new Vector2(xStartPos, crashPos.y + 0.5f);
             Vector2 newPos = new Vector2(xStartPos, crashPos.y + 0.0f);
             go = Instantiate(explodingPF, newPos, Quaternion.identity);
             go.GetComponentInChildren<TMP_Text>().text = _word[i].ToString();
-            //go.GetComponentInChildren<Rigidbody2D>().AddForce(transform.up * FORCE);
+            go.name = _word[i].ToString();
             xStartPos += CHAR_WIDTH;
         }
     }
-    /// <summary>
-    /// Check if word has crashed into stuff
-    /// </summary>
-    void CheckIfCrashed()
-    {
-        if (hasCrashed) return;
-        hasCrashed = collisionHandler.HasCrashed();
-        crashPos = transform.position;
-    }
+
 
     public bool HasWordBeenTyped()
     {
         return hasBeenTyped;
     }
 
-    public void SetWordHasBeenExploded()
-    {
-        wordHasExploded = true;
-    }
-    public bool GetWordHasBeenExploded()
-    {
-        return wordHasExploded;
-    }
 
-    public char GetNextLetter()
-    {
-        return _word[typeIndex];
-    }
-    /// <summary>
-    /// Remove a letter from the word
-    /// If no letters left then start a coroutine
-    /// so WordManager doesnt kill the word before
-    /// the last letter spoken
-    /// </summary>
-    /// <param name="typedLetter"></param>
     public void RemoveLetter(char typedLetter)
     {
         if (hasBeenTyped) return;
@@ -237,29 +265,30 @@ public class Word : MonoBehaviour {
 
         //SpeakLetter(typedLetter);
 
-
         _word = _word.Remove(0, 1);
+
         text.color = Color.red;
+
         SetText();
         SetBoxColliderWidth();
         if (_word.Length == 0)
         {
             //hasBeenTyped = true;
-            StartCoroutine(SetHasBeenTyped());
+            playAudio.PlayExplosion();
+            //StartCoroutine(SetHasBeenTyped());
+            SetHasBeenTyped();
         }
     }
 
-    IEnumerator SetHasBeenTyped()
-    {
-        yield return new WaitForSeconds(0.5f);
-        hasBeenTyped = true;
-    }
+
     void SpeakLetter(char typedLetter)
     {
         int index = (int)typedLetter % 32 -1;
         //print("Letter " + typedLetter + " is index " + index);
         audioSource.PlayOneShot(alphabet[index]);
     }
+
+
     private void SpawnExplosion()
     {
         //float wordMidPoint = (_word.Length / 2) * CHAR_WIDTH;
@@ -276,20 +305,42 @@ public class Word : MonoBehaviour {
         GameObject go = Instantiate(vfxExplosion, newPos, Quaternion.identity);
         Destroy(go, 1f);
     }
+
+
     public bool IsOffScreen()
     {
         return isOffScreen;
     }
+
+
     public bool HasCrashed()
     {
         return hasCrashed;
     }
-    public string GetWord()
+
+
+    private void SpeakWord()
     {
-        return _word;
+        if (hasSpoken) return;
+
+        if (IsVisible())
+        {
+            //print(transform.name + " is visible");
+            audioSource.PlayOneShot(wordSFX);
+            hasSpoken = true;
+        }
     }
-    private void SetText()
+
+
+    private bool IsVisible()
     {
-        text.text = _word;
+        Vector2 topPoint = new Vector2(0, 1);
+        Vector2 topEdge = Camera.main.ViewportToWorldPoint(topPoint);
+
+        float topRange = topEdge.y - HEIGHT_FROM_TOP;
+        return transform.position.y < topRange;
     }
+
+
+
 }

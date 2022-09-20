@@ -9,9 +9,9 @@ public class AudioController : MonoBehaviour
 {
     [SerializeField] private AudioMixer audioMixer;
     bool isMuted;
-    float volume = 0;
-    public Toggle toggle;
-    bool canUpdatePrefs = false;
+    //float volume = 0;
+    //public Toggle toggle;
+    //bool canUpdatePrefs = false;
 
     void Start()
     {

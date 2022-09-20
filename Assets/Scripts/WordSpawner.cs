@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class WordSpawner : MonoBehaviour {
 
-	public GameObject wordPrefab;
+    #region VARIABLES
+    public GameObject wordPrefab;
 	public GameObject letterPrefab;
 	public WordManager wordManager;
 
@@ -19,8 +20,16 @@ public class WordSpawner : MonoBehaviour {
 	// Letter stuff
 	float letterDelay = 3f;
 	private float nextLetterTime = 0f;
+    #endregion
 
-	private void Start()
+
+    private void Start()
+    {
+		Initialise();
+	}
+
+
+	private void Initialise()
     {
 		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		if (gameManager == null) Debug.Log("ERROR");
@@ -29,28 +38,28 @@ public class WordSpawner : MonoBehaviour {
 		nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 	}
 
+
     private void Update()
     {
 		SpawnWord();
         SpawnLetter();
-		//SetDelayTimes();
     }
+
 
 	public void SetSpawn(bool b)
     {
 		canSpawn = b;
     }
-	/// <summary>
-    /// Get delay timers from GameManager
-    /// </summary>
-	public void SetDelayTimes()
+
+
+
+	public void GetDelayTimes()
     {
 		wordDelay = gameManager.GetFallDelayTime("word");
 		letterDelay = gameManager.GetFallDelayTime("letter");
 	}
-	/// <summary>
-    /// Spawns a word
-    /// </summary>
+
+
 	private void SpawnWord()
 	{
 		if (!canSpawn) return;
@@ -63,41 +72,34 @@ public class WordSpawner : MonoBehaviour {
 			//_wordCounter++;
 		}
 	}
-	/// <summary>
-	/// SpawnLetter
-	/// </summary>
+
+
 	private void SpawnLetter()
 	{
+		Random.InitState(Random.Range(1,100));
 		if (!canSpawn) return;
-		//float chanceInA = 1000;
-		//float probablilityPercent = 0.05f;
 
-		bool prob = Random.Range(0, 10000) > 99000 ? true : false;
+		bool prob = Random.Range(0, 10000) > 9990 ? true : false;
 
-
-        //float rand = Random.Range(0, chanceInA);
-		if (prob)
+		//if (prob)
+		if (Time.time >= nextLetterTime)
         {
 			wordManager.AddLetter(GetLetter());
 			nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
 		}
-
-		//if (Time.time >= nextLetterTime)
-		//{
-		//	wordManager.AddLetter(GetLetter());
-		//	nextLetterTime = Time.time + gameManager.GetFallDelayTime("letter");
-		//}
 	}
-	/// <summary>
-	/// Gets the current word
-	/// </summary>
-	/// <returns></returns>
+
+
 	public GameObject GetWord()
     {
+
+		//gameManager.GetDifficultyLevel();
+
         Vector3 randomPosition = new Vector3(Random.Range(-3.5f, 3.5f), SPAWN_HEIGHT);
         GameObject wordObj = Instantiate(wordPrefab, randomPosition, Quaternion.identity);
         return wordObj;
     }
+
 
 	public GameObject GetLetter()
     {

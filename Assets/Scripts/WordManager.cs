@@ -33,19 +33,19 @@ public class WordManager : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
     }
 
+
     private void Update()
     {
         RemoveWhenCrashed();
     }
-    /// <summary>
-    /// Add a word to a list
-    /// </summary>
-    /// <param name="_word"></param>
+
+
     public void AddWord(GameObject _word)
     {
         //GameObject word = wordSpawner.SpawnWord();
         words.Add(_word);
     }
+
 
     public void AddLetter(GameObject _letter)
     {
@@ -53,6 +53,7 @@ public class WordManager : MonoBehaviour
         letters.Add(_letter);
         //canTypeWord = false;
     }
+
 
     public void TypeLetter(char typedLetter)
     {
@@ -112,6 +113,7 @@ public class WordManager : MonoBehaviour
         }
     }
 
+
     public void RemoveWhenCrashed()
     {
         // Remove word
@@ -133,7 +135,8 @@ public class WordManager : MonoBehaviour
             if (w.HasWordBeenTyped())
             {
                 //print("Word HasWordBeenTyped");
-                Destroy(words[i]);
+                Destroy(words[i],1);
+                //StartCoroutine(DestroyWordCoRoutine(i));
                 words.RemoveAt(i);
                 hasActiveWord = false;
                 //CheckIfAllDropped();
@@ -148,6 +151,12 @@ public class WordManager : MonoBehaviour
                 //CheckIfAllDropped();
                 IncreaseScore();
             }
+            if (w.IsOffScreen())
+            {
+                Destroy(words[i]);
+                words.RemoveAt(i);
+                hasActiveWord = false;
+            }
         }
         // Remove letter
         for (int i = 0; i < letters.Count; i++)
@@ -161,9 +170,20 @@ public class WordManager : MonoBehaviour
                 //DecreaseLives();
                 //CheckIfAllDropped();
             }
+            if (letter.GetIsOffScreen())
+            {
+                Destroy(letters[i]);
+                letters.RemoveAt(i);
+            }
         }
         // check if all words done
     }
+
+    //IEnumerator DestroyWordCoRoutine(int index)
+    //{
+    //    yield return new WaitForSeconds(1f);
+
+    //}
 
     public void SetAllDropped(bool b)
     {

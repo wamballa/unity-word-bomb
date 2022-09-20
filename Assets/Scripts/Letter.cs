@@ -5,6 +5,7 @@ using TMPro;
 
 public class Letter : MonoBehaviour
 {
+    #region VARIABLES
     // GLOBAL STUFF
     private GameManager gameManager;
 
@@ -25,9 +26,18 @@ public class Letter : MonoBehaviour
     // Explosion
     [SerializeField] private Explosion explosionScript;
 
+    bool isOffScreen;
 
-    // Start is called before the first frame update
+    #endregion
+
+
     void Start()
+    {
+        Initialise();
+    }
+
+
+    void Initialise()
     {
         // Get rigidbody
         rigidBody = transform.GetComponentInChildren<Rigidbody2D>();
@@ -47,17 +57,29 @@ public class Letter : MonoBehaviour
         SetFallSpeeds();
     }
 
+
+    private void FixedUpdate()
+    {
+        CheckIfOffScreen();
+        HandleMovement();
+        CheckIfCrashed();
+        HandleCrash();
+    }
+
+
+    void CheckIfOffScreen()
+    {
+        if (isOffScreen) return;
+        if (transform.position.y < -5.5f) isOffScreen = true;
+    }
+
+
     public void SetFallSpeeds()
     {
         fallSpeed = gameManager.GetFallSpeed("letter");
     }
 
-    private void FixedUpdate()
-    {
-        HandleMovement();
-        CheckIfCrashed();
-        HandleCrash();
-    }
+
     void SetXPosition()
     {
         float halfLength = (1 * CHAR_WIDTH) / 2;
@@ -71,19 +93,26 @@ public class Letter : MonoBehaviour
         Vector3 randomPosition = new Vector3(Random.Range(leftRange, rightRange), 5.5f);
         transform.position = randomPosition;
     }
+
+
     private void SetLetter()
     { 
         text.text = letter;
     }
 
+
     public char GetLetter()
     {
         return letter[0];
     }
+
+
     public void HandleExplosion()
     {
         explosionScript.SetCanExplode();
     }
+
+
     void HandleCrash()
     {
         if (!hasCrashed) return;
@@ -94,20 +123,32 @@ public class Letter : MonoBehaviour
         go.GetComponentInChildren<TMP_Text>().color = Color.white;
         canExplode = false;
     }
+
+
     void HandleMovement()
     {
         if (hasCrashed) return;
         transform.Translate(0f, -fallSpeed * Time.deltaTime, 0f);
     }
+
+
     void CheckIfCrashed()
     {
         if (hasCrashed) return;
         hasCrashed = letterCollisionHandler.HasCrashed();
         crashPos = transform.position;
     }
+
+
     public bool HasCrashed()
     {
         return hasCrashed;
+    }
+
+
+    public bool GetIsOffScreen()
+    {
+        return isOffScreen;
     }
 
 }
