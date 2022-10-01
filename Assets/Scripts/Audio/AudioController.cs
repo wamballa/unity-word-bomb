@@ -22,7 +22,7 @@ public class AudioController : MonoBehaviour
     void LoadSettings()
     {
         isMuted = (PlayerPrefs.GetInt("isMuted") != 0);
-        print("Audio Controller isMuted = " + isMuted);
+        //print("Audio Controller isMuted = " + isMuted);
     }
     void SetAudio()
     {

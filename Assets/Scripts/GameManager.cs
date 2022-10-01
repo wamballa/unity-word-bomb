@@ -41,6 +41,9 @@ public class GameManager : MonoBehaviour
 
     int wordDifficultyLevel = 3;
 
+    // DEBUG
+    [SerializeField] TMP_Text percentText;
+
 
     #endregion
 
@@ -77,7 +80,7 @@ public class GameManager : MonoBehaviour
     {
         if (GetPercentageFilled() > 80)
         {
-            print("reset world difficulty to 3");
+            //print("reset world difficulty to 3");
             wordDifficultyLevel = 3;
         }
     }
@@ -101,13 +104,13 @@ public class GameManager : MonoBehaviour
         {
             case "word":
                 return wordFallSpeed;
-                break;
+                //break;
             case "letter":
                 return letterFallSpeed;
-                break;
+                //break;
             default:
                 return 1f;
-                break;
+                //break;
         }
     }
 
@@ -118,15 +121,15 @@ public class GameManager : MonoBehaviour
         {
             case "word":
                 return wordFallDelay;
-                break;
+                //break;
             case "letter":
                 float rand = Random.Range(2, 4) + letterFallDelay;
                 //print("Letter delay = " + rand);
                 return rand;
-                break;
+                //break;
             default:
                 return 1f;
-                break;
+                //break;
         }
     }
 
@@ -197,7 +200,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (GetPercentageFilled() > 99)
+        if (GetPercentageFilled() > 90)
         {
             StopCoroutine(CheckForGameOver());
             StartCoroutine(GameOver());
@@ -222,17 +225,25 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private float GetPercentageFilled()
+    public float GetPercentageFilled()
     {
         // Get LETTER HIGH POINT
         GameObject[] letters = GameObject.FindGameObjectsWithTag("ExplodedLetter");
-        float highPoint = 0;
+        float letterHighPoint = -20;
 
         foreach (GameObject go in letters)
         {
-            if (go.transform.position.y > highPoint)
-                highPoint = go.transform.position.y;
+            //print("Letter Height = " + go.transform.position.y.ToString());
+            if (go.transform.position.y > letterHighPoint)
+            {
+
+                letterHighPoint = go.transform.position.y;
+     
+            }
+
         }
+
+        //print("Number of letters = " + letters.Length);
 
         // Calculate screen heigh
         float percentageFilled = 0;
@@ -248,11 +259,33 @@ public class GameManager : MonoBehaviour
             float groundY = GameObject.Find("Ground").GetComponent<Transform>().position.y;
             groundY += 0.25f;
 
-            float height = screenTop - groundY;
-            float heapHeight = highPoint - groundY;
+            float groundTop = GameObject.Find("GroundTop").GetComponent<Transform>().position.y;
 
-            percentageFilled = (heapHeight / height) * 100;
+
+            float height = screenTop - groundY;
+
+            float heightOfPlayingArea = screenTop - groundTop;
+
+            //float heapHeight = highPoint - groundY;
+
+            //float heapHeight = Mathf.Abs( letterHighPoint ) + Mathf.Abs( groundTop);
+
+            float heapHeight = letterHighPoint - groundTop;
+
+            //print("heightOfPlayingArea / heapHeight " + heightOfPlayingArea + " / " + heapHeight + " / " );
+
+            //percentageFilled = (heapHeight / height) * 100;
+
+            percentageFilled = (heapHeight / heightOfPlayingArea) * 100;
         }
+
+        // DEBUG
+        if (percentText != null)
+        percentText.text = percentageFilled + " %";
+
+        /////////////////////
+        percentageFilled = 0;
+
         return percentageFilled;
     }
 

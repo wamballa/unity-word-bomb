@@ -80,6 +80,8 @@ public class WordSpawner : MonoBehaviour {
 		if (!canSpawn) return;
 
 		bool prob = Random.Range(0, 10000) > 9990 ? true : false;
+		//print ("Game Filled % "+gameManager.GetPercentageFilled()
+		if (gameManager.GetPercentageFilled() < 25) return;
 
 		//if (prob)
 		if (Time.time >= nextLetterTime)

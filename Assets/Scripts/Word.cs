@@ -165,6 +165,7 @@ public class Word : MonoBehaviour {
 
     void SetHasBeenTyped()
     {
+        print("Been typed");
         hasBeenTyped = true;
     }
 
@@ -273,6 +274,7 @@ public class Word : MonoBehaviour {
         SetBoxColliderWidth();
         if (_word.Length == 0)
         {
+            print("Word has been typed");
             //hasBeenTyped = true;
             playAudio.PlayExplosion();
             //StartCoroutine(SetHasBeenTyped());

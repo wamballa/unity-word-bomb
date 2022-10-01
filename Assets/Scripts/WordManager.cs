@@ -25,7 +25,7 @@ public class WordManager : MonoBehaviour
     //bool allWordsDropped = false;
 
     // Keyboard stuff
-    [SerializeField] Keyboard keyboard;
+    //[SerializeField] Keyboard keyboard;
 
 
     private void Start()
@@ -36,7 +36,14 @@ public class WordManager : MonoBehaviour
 
     private void Update()
     {
+        ///
+        ///
+        ///
+        ///
         RemoveWhenCrashed();
+        ///
+        ///
+        ///
     }
 
 
@@ -76,7 +83,7 @@ public class WordManager : MonoBehaviour
         {
             for (int i = 0; i < words.Count; i++)
             {
-                //print("Next letter: word / letter " + words[i].name + " "+words[i].GetComponent<Word>().GetNextLetter());
+                //print("Next letter: word / letter " + words[i].name + " " + words[i].GetComponent<Word>().GetNextLetter());
                 if (words[i].GetComponent<Word>().GetNextLetter() == typedLetter)
                 {
                     activeWord = words[i];
@@ -120,7 +127,7 @@ public class WordManager : MonoBehaviour
         for (int i = 0; i < words.Count; i++)
         {
             Word w = words[i].GetComponent<Word>();
-
+            //print("Num / Word = " + " / " + w.name);
             if (w.HasCrashed())
             {
                 //print("Word HasCrashed");

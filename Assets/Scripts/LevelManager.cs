@@ -116,7 +116,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            GameObject.Find("Delta").GetComponent<TMP_Text>().text = PlayerPrefs.GetInt("highscore").ToString();
+            GameObject.Find("Delta").GetComponent<TMP_Text>().text = "";
         }
         GameObject.Find("HighScoreFeedback").GetComponent<MMFeedbacks>()?.PlayFeedbacks();
     }
