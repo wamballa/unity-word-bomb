@@ -25,6 +25,11 @@ public class PixelChanger : MonoBehaviour
     private GameObject groundPF;
     private HexColor groundColor;
     bool hasSetGroundColor = false;
+
+    public bool hasGradientBackground = false;
+
+    private Color textColor;
+
     #endregion
 
     private void Awake()
@@ -50,7 +55,7 @@ public class PixelChanger : MonoBehaviour
         if (sprite == null) print("ERROR: no sprite found");
         texture = sprite.texture;
 
-        ChangePixelColors(GetHex());
+            ChangePixelColors(GetHex());
 
         //ResizeSpriteToScreen();
     }
@@ -89,19 +94,32 @@ public class PixelChanger : MonoBehaviour
 
     void ChangePixelColors(HexColor hex)
     {
-        texture.SetPixel(0, 1, hex.h1);
-        texture.SetPixel(0, 0, hex.h2);
-
+        if (hasGradientBackground)
+        {
+            texture.SetPixel(0, 1, hex.h1);
+            texture.SetPixel(0, 0, hex.h2);
+        }
+        else
+        {
+            texture.SetPixel(0, 1, hex.h1);
+            texture.SetPixel(0, 0, hex.h1);
+        }
         texture.Apply();
         sprite = Sprite.Create(texture,
             new Rect(0, 0, 1, 2),
             new Vector2(0.5f, 0.5f));
     }
 
-
-    public Color GetHexColorForText()
+    public void SetTextColorInScene()
     {
-        return hexColors3[colorIndex].h1_5;
+
+    }
+
+
+    public Color GetColorForText()
+    {
+        //return hexColors3[colorIndex].h1_5;
+        return hexColors3[colorIndex].h2;
     }
 
 
