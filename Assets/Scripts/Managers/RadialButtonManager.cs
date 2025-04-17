@@ -8,7 +8,7 @@ public class RadialButtonManager : MonoBehaviour
     [SerializeField] private Button shuffleButton;
 
     private float timer;
-    private float timerDelay = 5f;
+    private float timerDelay = .1f;
 
     void Start()
     {
