@@ -1,0 +1,177 @@
+{
+    "m_SelectedDeviceId": "AA3M9X4A07G00942",
+    "m_SelectedProcess": {
+        "deviceId": "AA3M9X4A07G00942",
+        "name": "com.DefaultCompany.FallingWordsTypingGame",
+        "processId": 6875,
+        "exited": false
+    },
+    "m_SelectedPriority": 0,
+    "m_KnownProcessesForSerialization": [
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 24597,
+            "exited": true
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 26231,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 27183,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 28462,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 29541,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 30242,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 30650,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 22353,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 5425,
+            "exited": false
+        },
+        {
+            "deviceId": "AA3M9X4A07G00942",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 6875,
+            "exited": false
+        },
+        {
+            "deviceId": "25141FDEE000T5",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 8885,
+            "exited": false
+        },
+        {
+            "deviceId": "25141FDEE000T5",
+            "name": "com.DefaultCompany.FallingWordsTypingGame",
+            "processId": 9579,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_ExtraWindowState": {
+        "Type": 0,
+        "Height": 0.0
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 2,
+        "AutoCapture": true
+    },
+    "m_FilterOptions": {
+        "m_Filter": "",
+        "m_UseRegularExpressions": false,
+        "m_MatchCase": false
+    },
+    "m_SymbolPaths": [],
+    "m_CaptureVideoSettings": {
+        "TimeLimitEnabled": false,
+        "TimeLimit": 180,
+        "VideoSizeEnabled": false,
+        "VideoSizeX": 1280,
+        "VideoSizeY": 720,
+        "BitRateEnabled": false,
+        "BitRateK": 20000,
+        "DisplayIdEnabled": false,
+        "DisplayId": ""
+    },
+    "m_ScreenCaptureSettings": {
+        "Mode": 0,
+        "m_LastSaveLocation": [
+            "D:\\Documents\\Unity\\unity-word-bomb",
+            "D:\\Documents\\Unity\\unity-word-bomb"
+        ]
+    },
+    "m_QueryLayoutSettings": {
+        "LastLayoutSaveLocation": "",
+        "LastScreenshotSaveLocation": ""
+    },
+    "m_InputSettings": {
+        "ShiftModifier": false,
+        "SendText": "",
+        "PosixKillSignal": 0,
+        "TargetProcess": {
+            "deviceId": "",
+            "name": "",
+            "processId": 0,
+            "exited": false
+        }
+    },
+    "m_AutoScroll": 2
+}

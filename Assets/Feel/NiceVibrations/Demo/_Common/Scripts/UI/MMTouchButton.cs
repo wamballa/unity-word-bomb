@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+// Copyright (c) Meta Platforms, Inc. and affiliates. 
+
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Events;

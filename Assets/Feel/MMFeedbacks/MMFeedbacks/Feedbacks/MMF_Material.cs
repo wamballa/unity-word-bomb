@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the material of the target renderer everytime it's played.")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	[FeedbackPath("Renderer/Material")]
 	public class MMF_Material : MMF_Feedback
 	{
@@ -17,6 +20,8 @@ namespace MoreMountains.Feedbacks
 		public override string RequiredTargetText => TargetRenderer != null ? TargetRenderer.name : "";
 		public override string RequiresSetupText => "This feedback requires that a TargetRenderer be set to be able to work properly. You can set one below.";
 		#endif
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => TargetRenderer = FindAutomatedTarget<Renderer>();
         
 		/// a static bool used to disable all feedbacks of this type at once
 		public static bool FeedbackTypeAuthorized = true;
@@ -62,13 +67,14 @@ namespace MoreMountains.Feedbacks
 		/// the animation curve to interpolate the transition on
 		public AnimationCurve TransitionCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
 
-		public virtual float GetTime() { return (Timing.TimescaleMode == TimescaleModes.Scaled) ? Time.time : Time.unscaledTime; }
-		public virtual float GetDeltaTime() { return (Timing.TimescaleMode == TimescaleModes.Scaled) ? Time.deltaTime : Time.unscaledDeltaTime; }
+		public virtual float GetTime() { return (ComputedTimescaleMode == TimescaleModes.Scaled) ? Time.time : Time.unscaledTime; }
+		public virtual float GetDeltaTime() { return (ComputedTimescaleMode == TimescaleModes.Scaled) ? Time.deltaTime : Time.unscaledDeltaTime; }
         
 		protected int _currentIndex;
 		protected float _startedAt;
 		protected Coroutine[] _coroutines;
 		protected Material[] _tempMaterials;
+		protected Material[] _initialMaterials;
 
 		/// <summary>
 		/// On init, grabs the current index
@@ -77,12 +83,23 @@ namespace MoreMountains.Feedbacks
 		protected override void CustomInitialization(MMF_Player owner)
 		{
 			base.CustomInitialization(owner);
+			InitializeMaterials();
+		}
+
+		protected virtual void InitializeMaterials()
+		{
 			if (TargetRenderer == null)
 			{
 				return;
 			}
 			_currentIndex = InitialIndex;
 			_tempMaterials = new Material[TargetRenderer.materials.Length];
+			_initialMaterials = new Material[TargetRenderer.materials.Length];
+			for (int i = 0; i < _initialMaterials.Length; i++)
+			{
+				_initialMaterials[i] = new Material(TargetRenderer.materials[i]);
+			}
+			
 			if (RendererMaterialIndexes == null)
 			{
 				RendererMaterialIndexes = new int[1];
@@ -125,6 +142,7 @@ namespace MoreMountains.Feedbacks
 			{
 				for (int i = 0; i < RendererMaterialIndexes.Length; i++)
 				{
+					if (_coroutines[i] != null) { Owner.StopCoroutine(_coroutines[i]); }
 					_coroutines[i] = Owner.StartCoroutine(TransitionMaterial(TargetRenderer.materials[RendererMaterialIndexes[i]], Materials[newIndex], RendererMaterialIndexes[i]));
 				}
 			}
@@ -239,6 +257,20 @@ namespace MoreMountains.Feedbacks
 					_coroutines[i] = null;    
 				}
 			}
+		}
+		
+		/// <summary>
+		/// On restore, we put our object back at its initial position
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			TargetRenderer.materials = _initialMaterials;
+			InitializeMaterials();
 		}
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using MoreMountains.Feedbacks;
+using MoreMountains.Tools;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.FeedbacksForThirdParty
 {
@@ -12,6 +14,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	#if MM_POSTPROCESSING
 	[FeedbackPath("PostProcess/Global PP Volume Auto Blend")]
 	#endif
+	[MovedFrom(false, null, "MoreMountains.Feedbacks.PostProcessing")]
 	public class MMF_GlobalPPVolumeAutoBlend : MMF_Feedback
 	{
 		/// sets the inspector color for this feedback
@@ -21,6 +24,8 @@ namespace MoreMountains.FeedbacksForThirdParty
 		public override string RequiredTargetText { get { return TargetAutoBlend != null ? TargetAutoBlend.name : "";  } }
 		public override string RequiresSetupText { get { return "This feedback requires that a TargetAutoBlend be set to be able to work properly. You can set one below."; } }
 		#endif
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => TargetAutoBlend = FindAutomatedTarget<MMGlobalPostProcessingVolumeAutoBlend>();
         
 		/// a static bool used to disable all feedbacks of this type at once
 		public static bool FeedbackTypeAuthorized = true;
@@ -37,7 +42,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 			{
 				if (Mode == Modes.Override)
 				{
-					return BlendDuration;
+					return ApplyTimeMultiplier(BlendDuration);
 				}
 				else
 				{
@@ -47,7 +52,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 					}
 					else
 					{
-						return TargetAutoBlend.BlendDuration;
+						return ApplyTimeMultiplier(TargetAutoBlend.BlendDuration);
 					}
 				}
 			}
@@ -135,8 +140,9 @@ namespace MoreMountains.FeedbacksForThirdParty
 			}
 			else
 			{
-				TargetAutoBlend.BlendDuration = BlendDuration;
+				TargetAutoBlend.BlendDuration = ApplyTimeMultiplier(BlendDuration);
 				TargetAutoBlend.Curve = BlendCurve;
+				TargetAutoBlend.TimeScale = (ComputedTimescaleMode == TimescaleModes.Scaled) ? MMGlobalPostProcessingVolumeAutoBlend.TimeScales.Scaled : MMGlobalPostProcessingVolumeAutoBlend.TimeScales.Unscaled;
 				if (!NormalPlayDirection)
 				{
 					TargetAutoBlend.InitialWeight = FinalWeight;
@@ -171,6 +177,21 @@ namespace MoreMountains.FeedbacksForThirdParty
 			{
 				TargetAutoBlend.StopBlending();
 			}
+			#endif
+		}
+
+		/// <summary>
+		/// On restore, we put our object back at its initial position
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			#if UNITY_EDITOR && MM_POSTPROCESSING
+			TargetAutoBlend.RestoreInitialValues();
 			#endif
 		}
 	}

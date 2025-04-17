@@ -1,0 +1,17 @@
+{
+    "name": "Letter",
+    "rootNamespace": "",
+    "references": [
+        "Managers",
+        "Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

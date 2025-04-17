@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿#if MM_UI
+using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
@@ -11,6 +13,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the alpha of a target Image over time.")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
 	[FeedbackPath("UI/Image Alpha")]
 	public class MMF_ImageAlpha : MMF_Feedback
 	{
@@ -23,6 +26,9 @@ namespace MoreMountains.Feedbacks
 		public override string RequiredTargetText { get { return BoundImage != null ? BoundImage.name : "";  } }
 		public override string RequiresSetupText { get { return "This feedback requires that a BoundImage be set to be able to work properly. You can set one below."; } }
 		#endif
+		public override bool HasCustomInspectors => true;
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => BoundImage = FindAutomatedTarget<Image>();
 
 		/// the possible modes for this feedback
 		public enum Modes { OverTime, Instant, ToDestination }
@@ -66,13 +72,14 @@ namespace MoreMountains.Feedbacks
 		public float DestinationAlpha = 1f;
 		/// if this is true, the target will be disabled when this feedbacks is stopped
 		[Tooltip("if this is true, the target will be disabled when this feedbacks is stopped")] 
-		public bool DisableOnStop = true;
+		public bool DisableOnStop = false;
 
 		/// the duration of this feedback is the duration of the Image, or 0 if instant
 		public override float FeedbackDuration { get { return (Mode == Modes.Instant) ? 0f : ApplyTimeMultiplier(Duration); } set { Duration = value; } }
 
 		protected Coroutine _coroutine;
 		protected Color _imageColor;
+		protected Color _initialColor;
 		protected float _initialAlpha;
 
 		/// <summary>
@@ -86,7 +93,7 @@ namespace MoreMountains.Feedbacks
 			{
 				return;
 			}
-            
+			_initialColor = BoundImage.color;
 			Turn(true);
 			switch (Mode)
 			{
@@ -101,6 +108,7 @@ namespace MoreMountains.Feedbacks
 						return;
 					}
 
+					if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
 					_coroutine = Owner.StartCoroutine(ImageSequence());
 					break;
 				case Modes.ToDestination:
@@ -109,6 +117,7 @@ namespace MoreMountains.Feedbacks
 						return;
 					}
 
+					if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
 					_coroutine = Owner.StartCoroutine(ImageSequence());
 					break;
 			}
@@ -177,6 +186,10 @@ namespace MoreMountains.Feedbacks
 			{
 				Turn(false);    
 			}
+            if (_coroutine != null)
+            {
+                Owner.StopCoroutine(_coroutine);        
+            }			
 			_coroutine = null;
 		}
 
@@ -189,5 +202,18 @@ namespace MoreMountains.Feedbacks
 			BoundImage.gameObject.SetActive(status);
 			BoundImage.enabled = status;
 		}
+		
+		/// <summary>
+		/// On restore, we restore our initial state
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			BoundImage.color = _initialColor;
+		}
 	}
 }
+#endif

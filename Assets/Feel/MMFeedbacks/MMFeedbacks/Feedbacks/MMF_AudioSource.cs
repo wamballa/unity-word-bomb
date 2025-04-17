@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
 	[AddComponentMenu("")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	[FeedbackPath("Audio/AudioSource")]
 	[FeedbackHelp("This feedback lets you play a target audio source, with some elements at random.")]
 	public class MMF_AudioSource : MMF_Feedback
@@ -19,6 +21,9 @@ namespace MoreMountains.Feedbacks
 		public override string RequiredTargetText { get { return TargetAudioSource != null ? TargetAudioSource.name : "";  } }
 		public override string RequiresSetupText { get { return "This feedback requires that a TargetAudioSource be set to be able to work properly. You can set one below."; } }
 		#endif
+		public override bool HasRandomness => true;
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => TargetAudioSource = FindAutomatedTarget<AudioSource>();
 
 		/// the possible ways to interact with the audiosource
 		public enum Modes { Play, Pause, UnPause, Stop }
@@ -77,7 +82,7 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
             
-			float intensityMultiplier = Timing.ConstantIntensity ? 1f : feedbacksIntensity;
+			float intensityMultiplier = ComputeIntensity(feedbacksIntensity, position);
 			switch(Mode)
 			{
 				case Modes.Play:

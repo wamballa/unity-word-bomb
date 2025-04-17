@@ -34,27 +34,37 @@ namespace  MoreMountains.Feedbacks
 	/// </summary>
 	public struct MMFeedbacksEvent
 	{
-		public enum EventTypes { Play, Pause, Resume, Revert, Complete, Skip }
-        
-		public delegate void Delegate(MMFeedbacks source, EventTypes type);
 		static private event Delegate OnEvent;
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] private static void RuntimeInitialization() { OnEvent = null; }
+		static public void Register(Delegate callback) { OnEvent += callback; }
+		static public void Unregister(Delegate callback) { OnEvent -= callback; }
 
-		static public void Register(Delegate callback)
-		{
-			OnEvent += callback;
-		}
-
-		static public void Unregister(Delegate callback)
-		{
-			OnEvent -= callback;
-		}
-
+		public enum EventTypes { Play, Pause, Resume, Revert, Complete, SkipToTheEnd, RestoreInitialValues, Loop, Enable, Disable, InitializationComplete }
+		public delegate void Delegate(MMFeedbacks source, EventTypes type);
 		static public void Trigger(MMFeedbacks source, EventTypes type)
 		{
 			OnEvent?.Invoke(source, type);
 		}
 	}
+	
+	/// <summary>
+	/// An event used to set the RangeCenter on all feedbacks that listen for it
+	/// </summary>
+	public struct MMSetFeedbackRangeCenterEvent
+	{
+		static private event Delegate OnEvent;
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] private static void RuntimeInitialization() { OnEvent = null; }
+		static public void Register(Delegate callback) { OnEvent += callback; }
+		static public void Unregister(Delegate callback) { OnEvent -= callback; }
+		
+		public delegate void Delegate(Transform newCenter);
 
+		static public void Trigger(Transform newCenter)
+		{
+			OnEvent?.Invoke(newCenter);
+		}
+	}
+	
 	/// <summary>
 	/// A subclass of MMFeedbacks, contains UnityEvents that can be played, 
 	/// </summary>
@@ -82,12 +92,32 @@ namespace  MoreMountains.Feedbacks
 		/// This event will fire every time this MMFeedbacks plays its last MMFeedback
 		[Tooltip("This event will fire every time this MMFeedbacks plays its last MMFeedback")]
 		public UnityEvent OnComplete;
+		/// This event will fire every time this MMFeedbacks gets restored to its initial values
+		[Tooltip("This event will fire every time this MMFeedbacks gets restored to its initial values")]
+		public UnityEvent OnRestoreInitialValues;
+		/// This event will fire every time this MMFeedbacks gets skipped to the end
+		[Tooltip("This event will fire every time this MMFeedbacks gets skipped to the end")]
+		public UnityEvent OnSkipToTheEnd;
+		/// This event will fire after the MMF Player is done initializing
+		[Tooltip("This event will fire after the MMF Player is done initializing")]
+		public UnityEvent OnInitializationComplete;
+		/// This event will fire every time this MMFeedbacks' game object gets enabled
+		[Tooltip("This event will fire every time this MMFeedbacks' game object gets enabled")]
+		public UnityEvent OnEnable;
+		/// This event will fire every time this MMFeedbacks' game object gets disabled
+		[Tooltip("This event will fire every time this MMFeedbacks' game object gets disabled")]
+		public UnityEvent OnDisable;
 
-		public bool OnPlayIsNull { get; protected set; }
-		public bool OnPauseIsNull { get; protected set; }
-		public bool OnResumeIsNull { get; protected set; }
-		public bool OnRevertIsNull { get; protected set; }
-		public bool OnCompleteIsNull { get; protected set; }
+		public virtual bool OnPlayIsNull { get; protected set; }
+		public virtual bool OnPauseIsNull { get; protected set; }
+		public virtual bool OnResumeIsNull { get; protected set; }
+		public virtual bool OnRevertIsNull { get; protected set; }
+		public virtual bool OnCompleteIsNull { get; protected set; }
+		public virtual bool OnRestoreInitialValuesIsNull { get; protected set; }
+		public virtual bool OnSkipToTheEndIsNull { get; protected set; }
+		public virtual bool OnInitializationCompleteIsNull { get; protected set; }
+		public virtual bool OnEnableIsNull { get; protected set; }
+		public virtual bool OnDisableIsNull { get; protected set; }
 
 		/// <summary>
 		/// On init we store for each event whether or not we have one to invoke
@@ -99,6 +129,11 @@ namespace  MoreMountains.Feedbacks
 			OnResumeIsNull = OnResume == null;
 			OnRevertIsNull = OnRevert == null;
 			OnCompleteIsNull = OnComplete == null;
+			OnRestoreInitialValuesIsNull = OnRestoreInitialValues == null;
+			OnSkipToTheEndIsNull = OnSkipToTheEnd == null;
+			OnInitializationCompleteIsNull = OnInitializationComplete == null;
+			OnEnableIsNull = OnEnable == null;
+			OnDisableIsNull = OnDisable == null;
 		}
 
 		/// <summary>
@@ -132,23 +167,6 @@ namespace  MoreMountains.Feedbacks
 			if (TriggerMMFeedbacksEvents)
 			{
 				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.Pause);
-			}
-		}
-
-		/// <summary>
-		/// Fires skip events if needed
-		/// </summary>
-		/// <param name="source"></param>
-		public virtual void TriggerOnSkip(MMFeedbacks source)
-		{
-			if (!OnPauseIsNull && TriggerUnityEvents)
-			{
-				OnPause.Invoke();
-			}
-
-			if (TriggerMMFeedbacksEvents)
-			{
-				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.Skip);
 			}
 		}
 
@@ -200,6 +218,87 @@ namespace  MoreMountains.Feedbacks
 			if (TriggerMMFeedbacksEvents)
 			{
 				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.Complete);
+			}
+		}
+
+		/// <summary>
+		/// Fires skip events if needed
+		/// </summary>
+		/// <param name="source"></param>
+		public virtual void TriggerOnSkipToTheEnd(MMFeedbacks source)
+		{
+			if (!OnSkipToTheEndIsNull && TriggerUnityEvents)
+			{
+				OnSkipToTheEnd.Invoke();
+			}
+
+			if (TriggerMMFeedbacksEvents)
+			{
+				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.SkipToTheEnd);
+			}
+		}
+
+		public virtual void TriggerOnInitializationComplete(MMFeedbacks source)
+		{
+			if (!OnInitializationCompleteIsNull && TriggerUnityEvents)
+			{
+				OnInitializationComplete.Invoke();
+			}
+
+			if (TriggerMMFeedbacksEvents)
+			{
+				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.InitializationComplete);
+			}
+		}
+
+		/// <summary>
+		/// Fires revert events if needed
+		/// </summary>
+		/// <param name="source"></param>
+		public virtual void TriggerOnRestoreInitialValues(MMFeedbacks source)
+		{
+			if (!OnRestoreInitialValuesIsNull && TriggerUnityEvents)
+			{
+				OnRestoreInitialValues.Invoke();
+			}
+
+			if (TriggerMMFeedbacksEvents)
+			{
+				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.RestoreInitialValues);
+			}
+		}
+
+		/// <summary>
+		/// Fires enable events if needed
+		/// </summary>
+		/// <param name="source"></param>
+		public virtual void TriggerOnEnable(MMF_Player source)
+		{
+			if (!OnEnableIsNull && TriggerUnityEvents)
+			{
+				OnEnable.Invoke();
+			}
+
+			if (TriggerMMFeedbacksEvents)
+			{
+				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.Enable);
+			}
+		}
+
+		/// <summary>
+		/// Fires disable events if needed
+		/// </summary>
+		/// <param name="source"></param>
+		public virtual void TriggerOnDisable(MMF_Player source)
+		{
+			if (!OnDisableIsNull && TriggerUnityEvents)
+			{
+				OnDisable.Invoke();
+			}
+
+			if (TriggerMMFeedbacksEvents)
+			{
+				MMFeedbacksEvent.Trigger(source, MMFeedbacksEvent.EventTypes.Disable);
 			}
 		}
 	}

@@ -1,0 +1,139 @@
+Folder PATH listing for volume BackUp
+Volume serial number is B805-6AAF
+D:.
+¦   Audio.meta
+¦   BannerAd.meta
+¦   Core.meta
+¦   GameLogic.meta
+¦   Keyboard.meta
+¦   Letter.meta
+¦   Managers.meta
+¦   Number.meta
+¦   RadialMenuFramework.meta
+¦   scripts-structure.txt
+¦   scripts-structure.txt.meta
+¦   Word.meta
+¦   
++---Audio
+¦       Audio.asmdef
+¦       Audio.asmdef.meta
+¦       AudioController.cs
+¦       AudioController.cs.meta
+¦       AudioPlayer.cs
+¦       AudioPlayer.cs.meta
+¦       NewAudioMixer.mixer
+¦       NewAudioMixer.mixer.meta
+¦       
++---BannerAd
+¦       AdInitialiser.cs
+¦       AdInitialiser.cs.meta
+¦       BannerAd.cs
+¦       BannerAd.cs.meta
+¦       
++---Core
+¦       Core.asmdef
+¦       Core.asmdef.meta
+¦       FallingWord.cs
+¦       FallingWord.cs.meta
+¦       GameManager.cs
+¦       GameManager.cs.meta
+¦       
++---GameLogic
+¦       GameLogic.asmdef
+¦       GameLogic.asmdef.meta
+¦       WordGameplayManager.cs
+¦       WordGameplayManager.cs.meta
+¦       
++---Keyboard
+¦       EditorKeyboardSimulator.cs
+¦       EditorKeyboardSimulator.cs.meta
+¦       Keyboard.asmdef
+¦       Keyboard.asmdef.meta
+¦       TouchInputHandler.cs
+¦       TouchInputHandler.cs.meta
+¦       VirtualKeyButton.cs
+¦       VirtualKeyButton.cs.meta
+¦       
++---Letter
+¦       DrawExplosionCircle.cs
+¦       DrawExplosionCircle.cs.meta
+¦       ExplodedLetter.cs
+¦       ExplodedLetter.cs.meta
+¦       Letter.asmdef
+¦       Letter.asmdef.meta
+¦       Missile.cs
+¦       Missile.cs.meta
+¦       
++---Managers
+¦       CollisionHandler.cs
+¦       CollisionHandler.cs.meta
+¦       ExplosionHandler.cs
+¦       ExplosionHandler.cs.meta
+¦       FeedbackManager.cs
+¦       FeedbackManager.cs.meta
+¦       InputRouter.cs
+¦       InputRouter.cs.meta
+¦       LevelManager.cs
+¦       LevelManager.cs.meta
+¦       LevelManagerStart.cs
+¦       LevelManagerStart.cs.meta
+¦       Managers.asmdef
+¦       Managers.asmdef.meta
+¦       ObjectSpawner.cs
+¦       ObjectSpawner.cs.meta
+¦       PixelEffectHandler.cs
+¦       PixelEffectHandler.cs.meta
+¦       RadialButtonManager.cs
+¦       RadialButtonManager.cs.meta
+¦       SafeArea.cs
+¦       SafeArea.cs.meta
+¦       UIManager.cs
+¦       UIManager.cs.meta
+¦       UIManagerStart.cs
+¦       UIManagerStart.cs.meta
+¦       
++---Number
+¦       Number.asmdef
+¦       Number.asmdef.meta
+¦       NumberController.cs
+¦       NumberController.cs.meta
+¦       NumberGenerator.cs
+¦       NumberGenerator.cs.meta
+¦       
++---RadialMenuFramework
+¦   ¦   Editor.meta
+¦   ¦   RadialMenuFramework.asmdef
+¦   ¦   RadialMenuFramework.asmdef.meta
+¦   ¦   RMF_Demo.cs
+¦   ¦   RMF_Demo.cs.meta
+¦   ¦   RMF_ForceDirection.cs
+¦   ¦   RMF_ForceDirection.cs.meta
+¦   ¦   RMF_RadialMenu.cs
+¦   ¦   RMF_RadialMenu.cs.meta
+¦   ¦   RMF_RadialMenuElement.cs
+¦   ¦   RMF_RadialMenuElement.cs.meta
+¦   ¦   RMF_RadialMenuElement_ORIGINAL.cs
+¦   ¦   RMF_RadialMenuElement_ORIGINAL.cs.meta
+¦   ¦   RMF_RadialMenu_ORIGINAL.cs
+¦   ¦   RMF_RadialMenu_ORIGINAL.cs.meta
+¦   ¦   
+¦   +---Editor
+¦           RFM_RadialMenu_Editor.cs
+¦           RFM_RadialMenu_Editor.cs.meta
+¦           RFM_RadialMenu_Editor_ORIGINAL.cs
+¦           RFM_RadialMenu_Editor_ORIGINAL.cs.meta
+¦           
++---Word
+        Word.asmdef
+        Word.asmdef.meta
+        WordAudio.cs
+        WordAudio.cs.meta
+        WordGenerator.cs
+        WordGenerator.cs.meta
+        WordTimer.cs
+        WordTimer.cs.meta
+        WordTyping.cs
+        WordTyping.cs.meta
+        WordVisual.cs
+        WordVisual.cs.meta
+        

@@ -1,0 +1,21 @@
+{
+    "name": "Managers",
+    "rootNamespace": "",
+    "references": [
+        "Unity.TextMeshPro",
+        "MoreMountains.Tools",
+        "RadialMenuFramework",
+        "GameLogic",
+        "Core",
+        "Input"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

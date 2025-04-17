@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿#if MM_UI
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
@@ -10,6 +13,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will let you change the color of a target Image over time. You can also use it to command one or many MMImageShakers.")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	[FeedbackPath("UI/Image")]
 	public class MMF_Image : MMF_Feedback
 	{
@@ -26,9 +30,11 @@ namespace MoreMountains.Feedbacks
 		/// the duration of this feedback is the duration of the Image, or 0 if instant
 		public override float FeedbackDuration { get { return (Mode == Modes.Instant) ? 0f : ApplyTimeMultiplier(Duration); } set { Duration = value; } }
 		public override bool HasChannel => true;
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => BoundImage = FindAutomatedTarget<Image>();
 
 		/// the possible modes for this feedback
-		public enum Modes { OverTime, Instant, ShakerEvent }
+		public enum Modes { OverTime, Instant }
 
 		[MMFInspectorGroup("Image", true, 54, true)]
 		/// the Image to affect when playing the feedback
@@ -39,31 +45,8 @@ namespace MoreMountains.Feedbacks
 		public Modes Mode = Modes.OverTime;
 		/// how long the Image should change over time
 		[Tooltip("how long the Image should change over time")]
-		[MMFEnumCondition("Mode", (int)Modes.OverTime, (int)Modes.ShakerEvent)]
+		[MMFEnumCondition("Mode", (int)Modes.OverTime)]
 		public float Duration = 0.2f;
-		/// whether or not that Image should be turned off on start
-		[Tooltip("whether or not that Image should be turned off on start")]
-		public bool StartsOff = false;
-		/// whether or not to reset shaker values after shake
-		[Tooltip("whether or not to reset shaker values after shake")]
-		[MMFEnumCondition("Mode", (int)Modes.ShakerEvent)]
-		public bool ResetShakerValuesAfterShake = true;
-		/// whether or not to reset the target's values after shake
-		[Tooltip("whether or not to reset the target's values after shake")]
-		[MMFEnumCondition("Mode", (int)Modes.ShakerEvent)]
-		public bool ResetTargetValuesAfterShake = true;
-		/// whether or not to broadcast a range to only affect certain shakers
-		[Tooltip("whether or not to broadcast a range to only affect certain shakers")]
-		[MMFEnumCondition("Mode", (int)Modes.ShakerEvent)]
-		public bool UseRange = false;
-		/// the range of the event, in units
-		[Tooltip("the range of the event, in units")]
-		[MMFEnumCondition("Mode", (int)Modes.ShakerEvent)]
-		public float EventRange = 100f;
-		/// the transform to use to broadcast the event as origin point
-		[Tooltip("the transform to use to broadcast the event as origin point")]
-		[MMFEnumCondition("Mode", (int)Modes.ShakerEvent)]
-		public Transform EventOriginTransform;
 		/// if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over
 		[Tooltip("if this is true, calling that feedback will trigger it, even if it's in progress. If it's false, it'll prevent any new Play until the current one is over")] 
 		public bool AllowAdditivePlays = false;
@@ -72,17 +55,28 @@ namespace MoreMountains.Feedbacks
 		public bool ModifyColor = true;
 		/// the colors to apply to the Image over time
 		[Tooltip("the colors to apply to the Image over time")]
-		[MMFEnumCondition("Mode", (int)Modes.OverTime, (int)Modes.ShakerEvent)]
+		[MMFEnumCondition("Mode", (int)Modes.OverTime)]
 		public Gradient ColorOverTime;
 		/// the color to move to in instant mode
 		[Tooltip("the color to move to in instant mode")]
-		[MMFEnumCondition("Mode", (int)Modes.Instant, (int)Modes.ShakerEvent)]
+		[MMFEnumCondition("Mode", (int)Modes.Instant)]
 		public Color InstantColor;
+		/// whether or not that Image should be turned off on start
+		[Tooltip("whether or not that Image should be turned off on start")]
+		[FormerlySerializedAs("StartsOff")]
+		public bool DisableOnInit = false;
+		/// if this is true, the target will be enabled when this feedback gets played
+		[Tooltip("if this is true, the target will be enabled when this feedback gets played")] 
+		public bool EnableOnPlay = true;
+		/// if this is true, the target disabled after the color over time change ends
+		[Tooltip("if this is true, the target disabled after the color over time change ends")]
+		public bool DisableOnSequenceEnd = false;
 		/// if this is true, the target will be disabled when this feedbacks is stopped
 		[Tooltip("if this is true, the target will be disabled when this feedbacks is stopped")] 
-		public bool DisableOnStop = true;
+		public bool DisableOnStop = false;
 
 		protected Coroutine _coroutine;
+		protected Color _initialColor;
 
 		/// <summary>
 		/// On init we turn the Image off if needed
@@ -92,14 +86,9 @@ namespace MoreMountains.Feedbacks
 		{
 			base.CustomInitialization(owner);
 
-			if (EventOriginTransform == null)
-			{
-				EventOriginTransform = Owner.transform;
-			}
-
 			if (Active)
 			{
-				if (StartsOff)
+				if (DisableOnInit)
 				{
 					Turn(false);
 				}
@@ -118,7 +107,11 @@ namespace MoreMountains.Feedbacks
 				return;
 			}
         
-			Turn(true);
+			_initialColor = BoundImage.color;
+			if (EnableOnPlay)
+			{
+				Turn(true);	
+			}
 			switch (Mode)
 			{
 				case Modes.Instant:
@@ -132,13 +125,8 @@ namespace MoreMountains.Feedbacks
 					{
 						return;
 					}
+					if (_coroutine != null) { Owner.StopCoroutine(_coroutine); }
 					_coroutine = Owner.StartCoroutine(ImageSequence());
-					break;
-				case Modes.ShakerEvent:
-					/*MMImageShakeEvent.Trigger(Duration, ModifyColor, ColorOverTime, 
-					    feedbacksIntensity,
-					    Channel, ResetShakerValuesAfterShake, ResetTargetValuesAfterShake,
-					    UseRange, EventRange, EventOriginTransform.position);*/
 					break;
 			}
 		}
@@ -162,7 +150,7 @@ namespace MoreMountains.Feedbacks
 				yield return null;
 			}
 			SetImageValues(FinalNormalizedTime);
-			if (StartsOff)
+			if (DisableOnSequenceEnd)
 			{
 				Turn(false);
 			}
@@ -200,6 +188,12 @@ namespace MoreMountains.Feedbacks
 			{
 				Turn(false);    
 			}
+
+			if (_coroutine != null)
+			{
+				Owner.StopCoroutine(_coroutine);	
+			}
+			
 			_coroutine = null;
 		}
 
@@ -212,5 +206,18 @@ namespace MoreMountains.Feedbacks
 			BoundImage.gameObject.SetActive(status);
 			BoundImage.enabled = status;
 		}
+		
+		/// <summary>
+		/// On restore, we restore our initial state
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+			BoundImage.color = _initialColor;
+		}
 	}
 }
+#endif

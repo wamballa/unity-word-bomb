@@ -2,12 +2,14 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Ground
   - Word
   - Letter
   - ExplodedLetter
+  - Number
+  - CrashedNumber
   layers:
   - Default
   - TransparentFX
@@ -18,10 +20,10 @@ TagManager:
   - FacingLeft
   - FacingRight
   - Background
-  - 
-  - 
-  - 
-  - 
+  - Word
+  - Number
+  - Letter
+  - CrashedNumber
   - 
   - 
   - 
@@ -45,3 +47,8 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: UI
+    uniqueID: 3717386513
+    locked: 0
+  m_RenderingLayers:
+  - Default

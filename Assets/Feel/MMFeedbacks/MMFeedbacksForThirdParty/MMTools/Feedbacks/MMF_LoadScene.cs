@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MoreMountains.Tools;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
@@ -11,6 +12,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback will request the load of a new scene, using the method of your choice")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks.MMTools")]
 	[FeedbackPath("Scene/Load Scene")]
 	public class MMF_LoadScene : MMF_Feedback
 	{
@@ -51,13 +53,21 @@ namespace MoreMountains.Feedbacks
 		/// the priority to use when loading the new scenes
 		[Tooltip("the priority to use when loading the new scenes")]
 		public ThreadPriority Priority = ThreadPriority.High;
-		/// whether or not to interpolate progress (slower, but usually looks better and smoother)
-		[Tooltip("whether or not to interpolate progress (slower, but usually looks better and smoother)")]
-		public bool InterpolateProgress = true;
 		/// whether or not to perform extra checks to make sure the loading screen and destination scene are in the build settings
 		[Tooltip("whether or not to perform extra checks to make sure the loading screen and destination scene are in the build settings")]
 		public bool SecureLoad = true;
-
+		/// the chosen way to unload scenes (none, only the active scene, all loaded scenes)
+		[Tooltip("the chosen way to unload scenes (none, only the active scene, all loaded scenes)")]
+		[MMFEnumCondition("LoadingMode", (int)LoadingModes.MMAdditiveSceneLoadingManager)]
+		public MMAdditiveSceneLoadingManagerSettings.UnloadMethods UnloadMethod =
+			MMAdditiveSceneLoadingManagerSettings.UnloadMethods.AllScenes;
+		/// the name of the anti spill scene to use when loading additively.
+		/// If left empty, that scene will be automatically created, but you can specify any scene to use for that. Usually you'll want your own anti spill scene to be just an empty scene, but you can customize its lighting settings for example.
+		[Tooltip("the name of the anti spill scene to use when loading additively." +
+		         "If left empty, that scene will be automatically created, but you can specify any scene to use for that. Usually you'll want your own anti spill scene to be just an empty scene, but you can customize its lighting settings for example.")]
+		[MMFEnumCondition("LoadingMode", (int)LoadingModes.MMAdditiveSceneLoadingManager)]
+		public string AntiSpillSceneName = "";
+		
 		[MMFInspectorGroup("Loading Scene Delays", true, 58)] 
 		/// a delay (in seconds) to apply before the first fade plays
 		[Tooltip("a delay (in seconds) to apply before the first fade plays")]
@@ -74,11 +84,19 @@ namespace MoreMountains.Feedbacks
 		/// the duration (in seconds) of the exit fade
 		[Tooltip("the duration (in seconds) of the exit fade")]
 		public float ExitFadeDuration = 0.2f;
-        
-		[MMFInspectorGroup("Transitions", true, 59)] 
+		
+		[MMFInspectorGroup("Speed", true, 59)] 
+		/// whether or not to interpolate progress (slower, but usually looks better and smoother)
+		[Tooltip("whether or not to interpolate progress (slower, but usually looks better and smoother)")]
+		public bool InterpolateProgress = true;
 		/// the speed at which the progress bar should move if interpolated
 		[Tooltip("the speed at which the progress bar should move if interpolated")]
 		public float ProgressInterpolationSpeed = 5f;
+		/// a list of progress intervals (values should be between 0 and 1) and their associated speeds, letting you have the bar progress less linearly
+		[Tooltip("a list of progress intervals (values should be between 0 and 1) and their associated speeds, letting you have the bar progress less linearly")]
+		public List<MMSceneLoadingSpeedInterval> SpeedIntervals;
+        
+		[MMFInspectorGroup("Transitions", true, 59)]
 		/// the order in which to play fades (really depends on the type of fader you have in your loading screen
 		[Tooltip("the order in which to play fades (really depends on the type of fader you have in your loading screen")]
 		public MMAdditiveSceneLoadingManager.FadeModes FadeMode = MMAdditiveSceneLoadingManager.FadeModes.FadeInThenOut;
@@ -118,7 +136,8 @@ namespace MoreMountains.Feedbacks
 						AfterEntryFadeDelay,
 						BeforeExitFadeDelay, ExitFadeDuration,
 						EntryFadeTween, ExitFadeTween,
-						ProgressInterpolationSpeed, FadeMode);
+						ProgressInterpolationSpeed, FadeMode, UnloadMethod, AntiSpillSceneName,
+						SpeedIntervals);
 					break;
 			}
 		}

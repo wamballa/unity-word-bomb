@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 	using UnityEngine.InputSystem;
 #endif
 
@@ -17,7 +17,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			input = Keyboard.current.spaceKey.wasPressedThisFrame
 			        || Mouse.current.leftButton.wasPressedThisFrame;
 			#else
@@ -32,7 +32,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			input = Keyboard.current.spaceKey.isPressed
 			        || Mouse.current.leftButton.isPressed;
 			#else
@@ -48,7 +48,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			input = Keyboard.current.spaceKey.wasReleasedThisFrame
 			        || Mouse.current.leftButton.wasReleasedThisFrame;
 			#else
@@ -64,7 +64,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			input = Keyboard.current.enterKey.wasPressedThisFrame;
 			#else
 			input = (Input.GetKeyDown(KeyCode.Return));
@@ -77,7 +77,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 				input = Mouse.current.leftButton.wasReleasedThisFrame;
 			#else
 			input = Input.GetMouseButtonUp(0);
@@ -88,7 +88,7 @@ namespace MoreMountains.Feel
 
 		public static Vector2 MousePosition()
 		{
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 				return Mouse.current.position.ReadValue();
 			#else
 			return Input.mousePosition;
@@ -99,7 +99,7 @@ namespace MoreMountains.Feel
 		{
 			direction.x = 0f;
 			direction.y = 0f;
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 				if (Keyboard.current.leftArrowKey.isPressed)
 				{
 					direction.x = -1f;
@@ -128,7 +128,7 @@ namespace MoreMountains.Feel
 		{
 			bool input = false;
 			
-			#if ENABLE_INPUT_SYSTEM
+			#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 				switch(alpha)
 				{
 					case 1:

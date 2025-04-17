@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace MoreMountains.Feedbacks
 {
@@ -9,6 +10,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	[AddComponentMenu("")]
 	[FeedbackHelp("This feedback lets you trigger position, rotation and/or scale wiggles on an object equipped with a MMWiggle component, for the specified durations.")]
+	[MovedFrom(false, null, "MoreMountains.Feedbacks")]
 	[FeedbackPath("Transform/Wiggle")]
 	public class MMF_Wiggle : MMF_Feedback
 	{
@@ -21,6 +23,8 @@ namespace MoreMountains.Feedbacks
 		public override string RequiredTargetText { get { return TargetWiggle != null ? TargetWiggle.name : "";  } }
 		public override string RequiresSetupText { get { return "This feedback requires that a TargetWiggle be set to be able to work properly. You can set one below."; } }
 		#endif
+		public override bool HasAutomatedTargetAcquisition => true;
+		protected override void AutomateTargetAcquisition() => TargetWiggle = FindAutomatedTarget<MMWiggle>();
 
 		[MMFInspectorGroup("Target", true, 54, true)]
 		/// the Wiggle component to target
@@ -77,17 +81,17 @@ namespace MoreMountains.Feedbacks
 			TargetWiggle.enabled = true;
 			if (WigglePosition)
 			{
-				TargetWiggle.PositionWiggleProperties.UseUnscaledTime = Timing.TimescaleMode == TimescaleModes.Unscaled;
+				TargetWiggle.PositionWiggleProperties.UseUnscaledTime = !InScaledTimescaleMode;
 				TargetWiggle.WigglePosition(ApplyTimeMultiplier(WigglePositionDuration));
 			}
 			if (WiggleRotation)
 			{
-				TargetWiggle.RotationWiggleProperties.UseUnscaledTime = Timing.TimescaleMode == TimescaleModes.Unscaled;
+				TargetWiggle.RotationWiggleProperties.UseUnscaledTime = !InScaledTimescaleMode;
 				TargetWiggle.WiggleRotation(ApplyTimeMultiplier(WiggleRotationDuration));
 			}
 			if (WiggleScale)
 			{
-				TargetWiggle.ScaleWiggleProperties.UseUnscaledTime = Timing.TimescaleMode == TimescaleModes.Unscaled;
+				TargetWiggle.ScaleWiggleProperties.UseUnscaledTime = !InScaledTimescaleMode;
 				TargetWiggle.WiggleScale(ApplyTimeMultiplier(WiggleScaleDuration));
 			}
 		}
@@ -106,6 +110,19 @@ namespace MoreMountains.Feedbacks
 			base.CustomStopFeedback(position, feedbacksIntensity);
 
 			TargetWiggle.enabled = false;
+		}
+		
+		/// <summary>
+		/// On restore, we restore our initial state
+		/// </summary>
+		protected override void CustomRestoreInitialValues()
+		{
+			if (!Active || !FeedbackTypeAuthorized)
+			{
+				return;
+			}
+
+			TargetWiggle.RestoreInitialValues();
 		}
 	}
 }
