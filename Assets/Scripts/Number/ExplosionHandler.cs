@@ -33,7 +33,7 @@ public class ExplosionHandler : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
         animator = gameObject.GetComponent<Animator>();
 
-        if (!animator) Debug.LogError("Missing Animator on ExplosionHandler.");
+        //if (!animator) Debug.LogError("Missing Animator on ExplosionHandler.");
         if (!gameManager) Debug.LogError("Missing GameManager reference.");
 
         CanExplode = false;

@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.UI.Extensions;
+
 
 public class RadialMenuSwipeHandler : MonoBehaviour
 {
@@ -9,17 +11,17 @@ public class RadialMenuSwipeHandler : MonoBehaviour
     public GameObject linePrefab;
 
     private List<RMF_RadialMenuElement> selectedElements = new();
-    private List<LineRenderer> lines = new();
+    private List<UILineRenderer> lines = new();
     private bool isSwiping = false;
 
-    void Start()
-    {
-        GameObject lineObj = Instantiate(linePrefab, transform);
-        var lr = lineObj.GetComponent<LineRenderer>();
-        lr.positionCount = 2;
-        lr.SetPosition(0, new Vector3(0, 0, 0));
-        lr.SetPosition(1, new Vector3(5, 5, 0));
-    }
+    //void Start()
+    //{
+    //    GameObject lineObj = Instantiate(linePrefab, transform);
+    //    var lr = lineObj.GetComponent<UILineRenderer>();
+    //    lr.positionCount = 2;
+    //    lr.SetPosition(0, new Vector3(0, 0, 0));
+    //    lr.SetPosition(1, new Vector3(5, 5, 0));
+    //}
 
 
     void Update()
@@ -113,21 +115,22 @@ public class RadialMenuSwipeHandler : MonoBehaviour
     {
         if (selectedElements.Count < 2) return;
 
-        var canvas = GetComponentInParent<Canvas>();
-        var camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-
-        RectTransform startRT = selectedElements[selectedElements.Count - 2].GetComponentInChildren<Button>().GetComponent<RectTransform>();
-        RectTransform endRT = selectedElements[selectedElements.Count - 1].GetComponentInChildren<Button>().GetComponent<RectTransform>();
-
-        Vector3 worldStart, worldEnd;
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(startRT, RectTransformUtility.WorldToScreenPoint(camera, startRT.position), camera, out worldStart);
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(endRT, RectTransformUtility.WorldToScreenPoint(camera, endRT.position), camera, out worldEnd);
+        Vector2 start = WorldToCanvasPosition(selectedElements[^2].GetComponent<RectTransform>());
+        Vector2 end = WorldToCanvasPosition(selectedElements[^1].GetComponent<RectTransform>());
 
         GameObject lineObj = Instantiate(linePrefab, transform);
-        LineRenderer lr = lineObj.GetComponent<LineRenderer>();
-        lr.positionCount = 2;
-        lr.SetPositions(new Vector3[] { worldStart, worldEnd });
-        lines.Add(lr);
+        var uiLine = lineObj.GetComponent<UILineRenderer>();
+
+        uiLine.Points = new Vector2[] { start, end };
+        lines.Add(uiLine);
+    }
+
+    Vector2 WorldToCanvasPosition(RectTransform rt)
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, rt.position);
+        RectTransform canvasRect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, null, out Vector2 localPoint);
+        return localPoint;
     }
 
 

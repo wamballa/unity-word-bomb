@@ -12,7 +12,7 @@ public class RadialButtonManager : MonoBehaviour
 
     void Start()
     {
-        shuffleButton.onClick.AddListener(OnShuffleButtonPressed);
+        shuffleButton?.onClick.AddListener(OnShuffleButtonPressed);
         OnShuffleButtonPressed();
     }
 

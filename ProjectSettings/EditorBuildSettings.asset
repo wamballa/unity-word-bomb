@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Radial Menu Framework/Example.unity
+    path: Assets/Scene/Example.unity
     guid: 863db21f8e7c84a4590d10c26e3b0795
   - enabled: 1
     path: Assets/Scene/Start.unity
