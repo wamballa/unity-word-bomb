@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosionHandler : MonoBehaviour
+public class WordExplosionHandler : MonoBehaviour
 {
     [Header("Explosion Settings")]
     private float explosionRadius = 5f;
@@ -11,21 +11,12 @@ public class ExplosionHandler : MonoBehaviour
     public bool CanExplode { get; set; }
 
     public GameObject vfxExplosionPrefab;
+       private Collider2D[] objectsInExplosionRadius = null;
 
     private AudioSource audioSource;
     private GameManager gameManager;
-    private Collider2D[] objectsInExplosionRadius = null;
+ 
     private Animator animator;
-
-
-
-    //private GameObject[] explosionsPF;
-    //private GameObject sprite;
-
-    //bool canExplode;
-
-
-
 
     private void Start()
     {

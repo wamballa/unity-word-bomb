@@ -33,7 +33,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] float letterDelayDecrement = 0.1f;
     [SerializeField] float wordSpeedIncrement = 0.2f;
     [SerializeField] float difficultyDuration = 20f;
-    [SerializeField] int wordDifficultyLevel = 3;
+    [SerializeField] int wordDifficultyLevel = 2;
+
+    private List<string> radialLetterSets = new List<string>
+{
+    "abeort",
+    "aefnos",
+    "aeglsx",
+    "eflort",
+    "ehirsu",
+    "einrst",
+    "acelot",
+    "adoprt",
+    "acirst"
+};
+
+    private int currentSetIndex = 0;
 
     // GAME TIMER
     float startTime;
@@ -44,27 +59,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float dangerThresholdPercent = 90f;
     public float GetDangerThresholdPercent() => dangerThresholdPercent;
 
-
     #endregion
 
     void Start()
     {
         Initiatiate();
     }
-    
+
     void Initiatiate()
     {
         Log("Initiatiate");
         startTime = Time.time;
         LoadSettings();
+        string currentSet = GetCurrentRadialLetterSet();
+        FindFirstObjectByType<RMF_RadialMenu>()?.SetLetters(currentSet);
+
         StartCoroutine(GameOverCheckLoop());
         StartCoroutine(DifficultyLoop());
     }
 
     void Update()
     {
-        // CheckToReduceWordDifficulty();
-
         // debug
         if (Input.GetKeyUp(KeyCode.Tab))
         {
@@ -94,7 +109,7 @@ public class GameManager : MonoBehaviour
         while (!isGameOver)
         {
             float fillPercent = GetPercentageFilled();
-            fillPercentText.text = "Fill % = "+ fillPercent.ToString();
+            fillPercentText.text = "Fill % = " + fillPercent.ToString();
 
             yield return new WaitForSeconds(0.5f);
             if (fillPercent > dangerThresholdPercent)
@@ -107,7 +122,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
 
     public float GetPercentageFilled()
     {
@@ -141,7 +155,6 @@ public class GameManager : MonoBehaviour
         return (heapHeight / heightOfPlayingArea) * 100f;
     }
 
-
     void SetHighScore()
     {
         if (hasHighScoreBeenSet) return;
@@ -161,10 +174,11 @@ public class GameManager : MonoBehaviour
         if (score > highscore) SetHighScore();
     }
 
-    public void RestartGame() {
+    public void RestartGame()
+    {
         Time.timeScale = 1;
         SceneManager.LoadScene("Start");
-    } 
+    }
 
     public void RateMyApp()
     {
@@ -212,10 +226,13 @@ public class GameManager : MonoBehaviour
     public bool GetIsPaused() => isPaused;
     public bool GetIsGameOver() => isGameOver;
     public int GetWordDifficultyLevel() => wordDifficultyLevel;
+    public string GetCurrentRadialLetterSet() => radialLetterSets[currentSetIndex];
 
-
-
-
+    public void SetRadialSetByIndex(int index)
+    {
+        if (index >= 0 && index < radialLetterSets.Count)
+            currentSetIndex = index;
+    }
 
     private IEnumerator GameOver()
     {

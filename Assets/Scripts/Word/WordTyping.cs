@@ -42,6 +42,9 @@ public class WordTyping : MonoBehaviour
         TryTypeLetter(c); 
     }
 
+public void ResetWord(){
+    typedIndex = 0;
+}
 
     public bool IsComplete() => typedIndex >= currentWord.Length;
 }

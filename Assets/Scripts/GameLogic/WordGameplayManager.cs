@@ -13,23 +13,32 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
     // Booleans for state
     private bool hasActiveWord;
     private GameObject activeWord;
+    public GameObject explodingParticle;
 
     void Awake()
     {
         InputRouter.Receiver = this;
     }
 
-
     private void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         if (gameManager == null) { Debug.LogError("ERROR: No Game Manager Found!"); }
     }
-
 
     private void Update()
     {
         RemoveItemWhenNotNeeded();
+    }
+
+    void OnEnable()
+    {
+        RadialSwipeDrawer.OnRadialPointerUp += HandleOnRadialPointerUp;
+    }
+
+    void OnDisable()
+    {
+        RadialSwipeDrawer.OnRadialPointerUp -= HandleOnRadialPointerUp;
     }
 
 
@@ -70,9 +79,7 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                 hasActiveWord = false;
                 activeWord = null;
             }
-
             return;
-
         }
 
         // If there is no active word, find a word that starts with the typed letter and set it as active
@@ -83,14 +90,27 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
             var fw = wordObj.GetComponent<FallingWord>();
             if (fw == null || fw.state != FallingWord.FallingWordState.Falling) continue;
 
-            if (fw.GetNextLetter() == typedLetter )
+            if (fw.GetNextLetter() == typedLetter)
             {
                 activeWord = wordObj;
                 hasActiveWord = true;
                 fw.OnLetterTyped(typedLetter);
                 break;
             }
+        }
+    }
 
+    public void HandleOnRadialPointerUp()
+    {
+        if (hasActiveWord && activeWord != null)
+        {
+            if (activeWord == null) return;
+            Debug.Log("[WGM] Reset Activated Word");
+            var fw = activeWord.GetComponent<FallingWord>();
+            if (fw == null) return;
+            fw.OnResetWord();
+            hasActiveWord = false;
+            activeWord = null;
         }
     }
 
@@ -129,15 +149,20 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                     // Optional: lose life or trigger penalty
                     break;
                 case FallingWord.FallingWordState.Typed:
-                    Destroy(wordObj, 0.5f);
-                    words.RemoveAt(i);
-                    hasActiveWord = false;
-                    IncreaseScore();
+                    Debug.Log("[WordGameplayManager] State = Typed");
+
+                    FeedbackManager.Instance.PlayWordExplode( word);
+                    FeedbackManager.Instance.PlayCameraShake();
+
                     break;
                 case FallingWord.FallingWordState.Exploded:
+                    Debug.Log("[WordGameplayManager] State = Exploded");
                     Destroy(wordObj, 0.0f);
                     words.RemoveAt(i);
                     hasActiveWord = false;
+                    IncreaseScore();
+                    GameObject go = Instantiate (explodingParticle, transform);
+                    Destroy (go, 2f);
                     break;
                 case FallingWord.FallingWordState.Inactive:
                     Destroy(wordObj);
@@ -156,28 +181,6 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                 Destroy(numbers[i].gameObject);
                 numbers.RemoveAt(i);
             }
-
-            //NumberController number = numbers[i].GetComponent<NumberController>();
-            //GameObject numberObject = numbers[i].gameObject;
-            //if (number.GetIsOffScreen())
-            //{
-            //    //print("Number of numbers = " + numbers.Count);
-            //    //print("i = " + i);
-            //    //print("OFFSCREEN  " + numbers[i].gameObject.name);
-            //    Destroy(numbers[i].gameObject);
-            //    numbers.RemoveAt(i);
-
-            //}
-            //if (number.GetHasExploded())
-            //{
-            //    //print("Number to remove: " + numberObject.name);
-            //    //numbers[i].GetComponent<ExplosionHandler>().HandleExplosion();
-            //    Destroy(numberObject, 1);
-            //    numbers.RemoveAt(i);
-            //    gameManager.AddScore(1);
-
-            //}
-
         }
     }
 

@@ -4,13 +4,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Gradle;
+// using Unity.Android.Gradle;
 using TMPro;
 
 
 [AddComponentMenu("Radial Menu Framework/RMF Core Script")]
-public class RMF_RadialMenu : MonoBehaviour {
-
+public class RMF_RadialMenu : MonoBehaviour
+{
+    #region 
     [Header("Lerp Settings")]
     public AnimationCurve movementCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public float lerpDuration = 0.5f;
@@ -60,9 +61,10 @@ public class RMF_RadialMenu : MonoBehaviour {
     private PointerEventData pointer;
 
     public enum LerpStyle { Circular, Arc }
+    #endregion
 
-
-    void Awake() {
+    void Awake()
+    {
 
         pointer = new PointerEventData(EventSystem.current);
 
@@ -79,8 +81,10 @@ public class RMF_RadialMenu : MonoBehaviour {
         angleOffset = (360f / (float)elementCount);
 
         //Loop through and set up the elements.
-        for (int i = 0; i < elementCount; i++) {
-            if (elements[i] == null) {
+        for (int i = 0; i < elementCount; i++)
+        {
+            if (elements[i] == null)
+            {
                 Debug.LogError("Radial Menu: element " + i.ToString() + " in the radial menu " + gameObject.name + " is null!");
                 continue;
             }
@@ -95,10 +99,12 @@ public class RMF_RadialMenu : MonoBehaviour {
     }
 
 
-    void Start() {
+    void Start()
+    {
 
 
-        if (useGamepad) {
+        if (useGamepad)
+        {
             EventSystem.current.SetSelectedGameObject(gameObject, null); //We'll make this the active object when we start it. Comment this line to set it manually from another script.
             if (useSelectionFollower && selectionFollowerContainer != null)
                 selectionFollowerContainer.rotation = Quaternion.Euler(0, 0, -globalOffset); //Point the selection follower at the first element.
@@ -107,7 +113,8 @@ public class RMF_RadialMenu : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         //If your gamepad uses different horizontal and vertical joystick inputs, change them here!
         //==============================================================================================
@@ -116,7 +123,7 @@ public class RMF_RadialMenu : MonoBehaviour {
 
 
         float rawAngle;
-        
+
         if (!useGamepad)
             rawAngle = Mathf.Atan2(Input.mousePosition.y - rt.position.y, Input.mousePosition.x - rt.position.x) * Mathf.Rad2Deg;
         else
@@ -129,18 +136,21 @@ public class RMF_RadialMenu : MonoBehaviour {
             currentAngle = normalizeAngle(-rawAngle + 90 - globalOffset + (angleOffset / 2f));
 
         //Handles lazy selection. Checks the current angle, matches it to the index of an element, and then highlights that element.
-        if (angleOffset != 0 && useLazySelection) {
+        if (angleOffset != 0 && useLazySelection)
+        {
 
             //Current element index we're pointing at.
             index = (int)(currentAngle / angleOffset);
 
-            if (elements[index] != null) {
+            if (elements[index] != null)
+            {
 
                 //Select it.
                 selectButton(index);
 
                 //If we click or press a "submit" button (Button on joystick, enter, or spacebar), then we'll execut the OnClick() function for the button.
-                if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Submit")) {
+                if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("Submit"))
+                {
 
                     ExecuteEvents.Execute(elements[index].button.gameObject, pointer, ExecuteEvents.submitHandler);
 
@@ -151,14 +161,47 @@ public class RMF_RadialMenu : MonoBehaviour {
         }
 
         //Updates the selection follower if we're using one.
-        if (useSelectionFollower && selectionFollowerContainer != null) {
+        if (useSelectionFollower && selectionFollowerContainer != null)
+        {
             if (!useGamepad || joystickMoved)
                 selectionFollowerContainer.rotation = Quaternion.Euler(0, 0, rawAngle + 270);
-           
 
-        } 
+
+        }
 
     }
+
+    public void SetLetters(string letters)
+    {
+        List<char> shuffled = new List<char>(letters.ToCharArray());
+
+        // Shuffle the letters
+        for (int i = shuffled.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (shuffled[i], shuffled[j]) = (shuffled[j], shuffled[i]);
+        }
+
+
+        if (shuffled.Count != elements.Count)
+        {
+            Debug.LogError($"[RMF] Letter count {letters.Length} doesn't match number of elements {elements.Count}");
+            return;
+        }
+
+        // Apply to menu elements
+        for (int i = 0; i < Mathf.Min(shuffled.Count, elements.Count); i++)
+        {
+            var textComponent = elements[i].GetComponentInChildren<TMP_Text>();
+            if (textComponent != null)
+            {
+                textComponent.text = shuffled[i].ToString().ToUpper();
+            }
+        }
+
+        RecalculateAngles(); // Ensure layout updates
+    }
+
 
 
     public void ShuffleElementsRuntime()
@@ -348,7 +391,7 @@ public class RMF_RadialMenu : MonoBehaviour {
             element.assignedIndex = i;
 
             Image image = element.GetComponentInChildren<Image>();
-            if (i==0) image.color = Color.red; else image.color = Color.white;
+            // if (i == 1) image.color = Color.red; else image.color = Color.white;
 
             float angle = i * angleOffset;
 
@@ -371,15 +414,17 @@ public class RMF_RadialMenu : MonoBehaviour {
     }
 
     //Selects the button with the specified index.
-    private void selectButton(int i) {
+    private void selectButton(int i)
+    {
 
-          if (elements[i].active == false) {
+        if (elements[i].active == false)
+        {
 
             elements[i].highlightThisElement(pointer); //Select this one
 
-            if (previousActiveIndex != i) 
+            if (previousActiveIndex != i)
                 elements[previousActiveIndex].unHighlightThisElement(pointer); //Deselect the last one.
-            
+
 
         }
 
@@ -388,7 +433,8 @@ public class RMF_RadialMenu : MonoBehaviour {
     }
 
     //Keeps angles between 0 and 360.
-    private float normalizeAngle(float angle) {
+    private float normalizeAngle(float angle)
+    {
 
         angle = angle % 360f;
 

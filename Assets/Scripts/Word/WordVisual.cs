@@ -62,6 +62,15 @@ public class WordVisual : MonoBehaviour
         text.text = $"<color=#FF0000>{fullWord.Substring(0, lettersHighlightIndex)}</color>{fullWord.Substring(lettersHighlightIndex)}";
     }
 
+    public void ResetWord()
+    {
+
+        lettersHighlightIndex = 0;
+        text.text = fullWord; // Reassign the plain word with no rich text tags
+        text.color = Color.white; // Ensure default color
+
+    }
+
     public void ExplodeToLetters()
     {
         if (text == null || fullWord == null) return;
