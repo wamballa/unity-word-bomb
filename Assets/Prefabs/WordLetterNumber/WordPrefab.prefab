@@ -480,7 +480,7 @@ MonoBehaviour:
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   StopFeedbacksOnDisable: 0
-  PlayCount: 0
+  PlayCount: 2
   references:
     version: 2
     RefIds:
@@ -593,7 +593,7 @@ MonoBehaviour:
           NumberOfRepeats: 0
           RepeatForever: 0
           DelayBetweenRepeats: 1
-          PlayCount: 0
+          PlayCount: 2
           LimitPlayCount: 0
           MaxPlayCount: 3
           SetPlayCountToZeroOnReset: 0
@@ -916,6 +916,8 @@ MonoBehaviour:
   debugMode: 0
   state: 0
   wordExplodeStartFeedback: {fileID: 4235602399788613389}
+  wordExplodeFinishFeedback: {fileID: 4052361324120893783}
+  wordExplodeInactiveFeedback: {fileID: 1219461298976172792}
 --- !u!114 &7936984963875834353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1340,7 +1342,7 @@ MonoBehaviour:
           NumberOfRepeats: 0
           RepeatForever: 0
           DelayBetweenRepeats: 1
-          PlayCount: 0
+          PlayCount: 2
           LimitPlayCount: 0
           MaxPlayCount: 3
           SetPlayCountToZeroOnReset: 0

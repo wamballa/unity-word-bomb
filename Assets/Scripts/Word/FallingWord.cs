@@ -15,6 +15,7 @@ public class FallingWord : MonoBehaviour
         Falling,
         Typed,
         Crashed,
+        Exploding,
         Exploded,
         Inactive
     }
@@ -30,6 +31,8 @@ public class FallingWord : MonoBehaviour
     private RadialSwipeDrawer radialSwipeDrawer;
 
     public MMF_Player wordExplodeStartFeedback;
+    public MMF_Player wordExplodeFinishFeedback;
+    public MMF_Player wordExplodeInactiveFeedback;
 
     public char GetNextLetter() => typing.GetNextLetter();
 
@@ -122,6 +125,11 @@ public class FallingWord : MonoBehaviour
     public void SetState(FallingWordState newState)
     {
         state = newState;
+    }
+
+    public void SetStateExploded()
+    {
+        SetState(FallingWordState.Exploded);
     }
 
 

@@ -28,8 +28,7 @@ public class ObjectSpawner : MonoBehaviour
     {
         nextWordTime = Time.time + gameManager.GetFallDelayTime("word");
         nextNumberTime = Time.time + gameManager.GetFallDelayTime("number");
-        //canSpawnWord = true;
-        //canSpawnNumber = true;
+
     }
 
     private void Update()

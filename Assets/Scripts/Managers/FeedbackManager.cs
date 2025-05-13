@@ -22,6 +22,7 @@ public class FeedbackManager : MonoBehaviour
     [Header("Word Explode Feedbacks")]
     public MMF_Player wordExplodeStartFeedback;
     public MMF_Player wordExplodeFinishFeedback;
+    public MMF_Player wordExplodeInactiveFeedback;
 
     public void PlayCameraShake() => playCameraShakeFeedback?.PlayFeedbacks();
     // public void PlayScoreMove() => scoreMovesFeedback?.PlayFeedbacks();
@@ -65,17 +66,29 @@ public class FeedbackManager : MonoBehaviour
         MMF_Player wordExplodeStartFeedback;
 
         wordExplodeStartFeedback = fw.wordExplodeStartFeedback;
-
+        wordExplodeFinishFeedback = fw.wordExplodeFinishFeedback;
+        wordExplodeInactiveFeedback = fw.wordExplodeInactiveFeedback;
+        
         wordExplodeStartFeedback.Events.OnComplete.RemoveAllListeners();
-
         wordExplodeStartFeedback.Events.OnComplete.AddListener(() =>
         {
             // wordExplodeFinishFeedback.PlayFeedbacks();
-            Debug.Log("<<<...........................>>>>");
+            Debug.Log("<<<wordExplodeStartFeedback Complete");
+            fw.SetState(FallingWord.FallingWordState.Exploding);
+            wordExplodeFinishFeedback.PlayFeedbacks();
+
+        });
+
+
+        wordExplodeFinishFeedback.Events.OnComplete.RemoveAllListeners();
+        wordExplodeFinishFeedback.Events.OnComplete.AddListener(() =>
+        {
+            Debug.Log("<<< wordExplodeFinishFeedback Complete");
+            wordExplodeInactiveFeedback.PlayFeedbacks();
             fw.SetState(FallingWord.FallingWordState.Exploded);
         });
 
-        wordExplodeStartFeedback.PlayFeedbacks();
+    wordExplodeStartFeedback.PlayFeedbacks();
     }
 
     public void PlayKeyboardMove()

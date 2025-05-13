@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -148,13 +149,21 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                 case FallingWord.FallingWordState.Crashed:
                     // Optional: lose life or trigger penalty
                     break;
+
                 case FallingWord.FallingWordState.Typed:
-                    Debug.Log("[WordGameplayManager] State = Typed");
+                    Debug.Log("[WordGameplayManager] State = Typed ");
 
                     FeedbackManager.Instance.PlayWordExplode( word);
                     FeedbackManager.Instance.PlayCameraShake();
 
+                    word.SetState(FallingWord.FallingWordState.Exploding);
+
                     break;
+
+                case FallingWord.FallingWordState.Exploding:
+                    Debug.Log("[WordGameplayManager] State = Exploding");
+                    break;
+
                 case FallingWord.FallingWordState.Exploded:
                     Debug.Log("[WordGameplayManager] State = Exploded");
                     Destroy(wordObj, 0.0f);
@@ -164,6 +173,7 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                     GameObject go = Instantiate (explodingParticle, transform);
                     Destroy (go, 2f);
                     break;
+
                 case FallingWord.FallingWordState.Inactive:
                     Destroy(wordObj);
                     words.RemoveAt(i);
