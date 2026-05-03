@@ -12,3 +12,4 @@
 
 ## Done
 - WB-001: Code review following SOLID principles. Commit: `docs: add maintainability guide and SOLID review`.
+- WB-008: Move backlog into `Assets/`. Commit: `docs: move backlog into assets`.

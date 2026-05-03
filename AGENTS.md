@@ -16,7 +16,7 @@
 
 ## Working Rules
 - Keep changes small and task-scoped.
-- Backlog task IDs live in `BACKLOG.md`; create one meaningful commit for each completed task.
+- Backlog task IDs live in `Assets/BACKLOG.md`; create one meaningful commit for each completed task.
 - Prefer data-driven tuning over hard-coded spawn/difficulty values.
 - Preserve user scene/prefab changes unless the task explicitly asks to change them.
 - Before refactoring, check serialized public fields and scene references to avoid breaking Unity inspector wiring.
