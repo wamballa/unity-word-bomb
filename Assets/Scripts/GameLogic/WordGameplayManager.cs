@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
 {
-    private GameManager gameManager;
+    [SerializeField] private GameManager gameManager;
     public List<GameObject> words = new List<GameObject>();
     public List<GameObject> numbers = new List<GameObject>();
     private List<GameObject> letters = new List<GameObject>();
@@ -16,15 +15,24 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
     private GameObject activeWord;
     public GameObject explodingParticle;
 
-    void Awake()
+    void Awake() => InputRouter.Receiver = this;
+
+    void OnEnable()
     {
-        InputRouter.Receiver = this;
+        RadialSwipeDrawer.OnRadialPointerUp += HandleOnRadialPointerUp;
     }
 
     private void Start()
     {
-        gameManager = FindFirstObjectByType<GameManager>();
-        if (gameManager == null) { Debug.LogError("ERROR: No Game Manager Found!"); }
+        if (gameManager == null)
+        {
+            gameManager = FindFirstObjectByType<GameManager>();
+        }
+
+        if (gameManager == null)
+        {
+            Debug.LogError("ERROR: No Game Manager Found!");
+        }
     }
 
     private void Update()
@@ -32,27 +40,53 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
         RemoveItemWhenNotNeeded();
     }
 
-    void OnEnable()
-    {
-        RadialSwipeDrawer.OnRadialPointerUp += HandleOnRadialPointerUp;
-    }
+
 
     void OnDisable()
     {
         RadialSwipeDrawer.OnRadialPointerUp -= HandleOnRadialPointerUp;
     }
 
+    public int WordCount => CountUnique(words);
+    public int NumberCount => CountUnique(numbers);
+    public bool HasActiveWord => hasActiveWord && activeWord != null;
+    public FallingWord ActiveFallingWord => activeWord ? activeWord.GetComponent<FallingWord>() : null;
 
-    public void AddWordAsPrefab(GameObject _word)
+    public void AddWordAsPrefab(GameObject w)
     {
-        if (_word == null) Debug.LogError("Word is null");
-        words.Add(_word);
+        if (w && !words.Contains(w)) words.Add(w);
     }
 
-
-    public void AddNumber(GameObject _number)
+    public void AddNumber(GameObject n)
     {
-        numbers.Add(_number);
+        if (n && !numbers.Contains(n)) numbers.Add(n);
+    }
+
+    public bool TryGetAutoplayTarget(out FallingWord target)
+    {
+        target = ActiveFallingWord;
+        if (target != null && target.IsFalling && target.GetNextLetter() != '\0') return true;
+
+        target = words
+            .Where(wordObj => wordObj != null)
+            .Distinct()
+            .Select(wordObj => wordObj.GetComponent<FallingWord>())
+            .Where(word => word != null && word.IsFalling && word.GetNextLetter() != '\0')
+            .OrderBy(word => word.transform.position.y)
+            .FirstOrDefault();
+
+        return target != null;
+    }
+
+    public void ClearDebugTarget()
+    {
+        if (HasActiveWord)
+        {
+            ActiveFallingWord?.OnResetWord();
+        }
+
+        hasActiveWord = false;
+        activeWord = null;
     }
 
 
@@ -153,7 +187,7 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                 case FallingWord.FallingWordState.Typed:
                     Debug.Log("[WordGameplayManager] State = Typed ");
 
-                    FeedbackManager.Instance.PlayWordExplode( word);
+                    FeedbackManager.Instance.PlayWordExplode(word);
                     FeedbackManager.Instance.PlayCameraShake();
 
                     word.SetState(FallingWord.FallingWordState.Exploding);
@@ -170,8 +204,8 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
                     words.RemoveAt(i);
                     hasActiveWord = false;
                     IncreaseScore();
-                    GameObject go = Instantiate (explodingParticle, transform);
-                    Destroy (go, 2f);
+                    GameObject go = Instantiate(explodingParticle, transform);
+                    Destroy(go, 2f);
                     break;
 
                 case FallingWord.FallingWordState.Inactive:
@@ -197,5 +231,13 @@ public class WordGameplayManager : MonoBehaviour, IGameplayInputReceiver
     void IncreaseScore()
     {
         gameManager.AddScore(1);
+    }
+
+    private static int CountUnique(List<GameObject> items)
+    {
+        return items
+            .Where(item => item != null)
+            .Distinct()
+            .Count();
     }
 }

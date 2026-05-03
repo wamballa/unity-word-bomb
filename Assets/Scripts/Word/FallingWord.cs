@@ -35,6 +35,9 @@ public class FallingWord : MonoBehaviour
     public MMF_Player wordExplodeInactiveFeedback;
 
     public char GetNextLetter() => typing.GetNextLetter();
+    public string GetCurrentWord() => typing.GetCurrentWord();
+    public int GetTypedIndex() => typing.GetTypedIndex();
+    public bool IsFalling => state == FallingWordState.Falling;
 
     void Awake()
     {
@@ -114,7 +117,7 @@ public class FallingWord : MonoBehaviour
                 visual.RevealNextLetter(); // show red highlight
                 audioPlayer.PlaySuccess(); // play feedback
 
-                if (typed.Equals(targetWord, System.StringComparison.OrdinalIgnoreCase))
+                if (typing.IsComplete() || typed.Equals(targetWord, System.StringComparison.OrdinalIgnoreCase))
                 {
                     SetState(FallingWordState.Typed);
                 }

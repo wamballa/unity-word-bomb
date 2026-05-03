@@ -14,6 +14,7 @@ public class WordTyping : MonoBehaviour
     }
 
     public string GetCurrentWord() => currentWord;
+    public int GetTypedIndex() => typedIndex;
 
     public bool TryTypeLetter(char c)
     {
