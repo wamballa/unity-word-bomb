@@ -13,3 +13,4 @@
 - WB-001: Code review following SOLID principles. Commit: `docs: add maintainability guide and SOLID review`.
 - WB-002: Extract level and spawn tuning into data-driven configuration. Commit: `feat: add data-driven level config`.
 - WB-008: Move backlog into `Assets/`. Commit: `docs: move backlog into assets`.
+- WB-009: Create a safety branch for local cleanup and push it without changing GitHub `main`. Commit: `chore: record cleanup branch task`.
