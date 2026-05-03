@@ -1,7 +1,6 @@
 # Backlog
 
 ## To Do
-- WB-002: Extract level and spawn tuning into data-driven configuration.
 - WB-003: Refactor `ObjectSpawner` around a reusable spawn schedule and spawn bounds service.
 - WB-004: Split `GameManager` into score/settings, danger/heap, difficulty progression, and scene flow responsibilities.
 - WB-005: Make falling-word setup injectable so word selection, radial letter sets, and movement can be tested independently.
@@ -12,4 +11,5 @@
 
 ## Done
 - WB-001: Code review following SOLID principles. Commit: `docs: add maintainability guide and SOLID review`.
+- WB-002: Extract level and spawn tuning into data-driven configuration. Commit: `feat: add data-driven level config`.
 - WB-008: Move backlog into `Assets/`. Commit: `docs: move backlog into assets`.

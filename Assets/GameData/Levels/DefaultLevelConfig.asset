@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1b4cfa98a1d4a8fb4bfa91e51b85b6a, type: 3}
+  m_Name: DefaultLevelConfig
+  m_EditorClassIdentifier:
+  wordFallSpeed: 0.4
+  letterFallSpeed: 0.6
+  numberFallSpeed: 4.6
+  wordFallDelay: 3.2
+  letterFallDelay: 5
+  numberFallDelay: 3.1
+  wordDelayDecrement: 0.2
+  letterDelayDecrement: 0.1
+  wordSpeedIncrement: 0
+  difficultyDuration: 30
+  startingWordLength: 3
+  maxWordLength: 7
+  dangerThresholdPercent: 80
+  radialLetterSets:
+  - abeort
+  - aefnos
+  - aeglsx
+  - eflort
+  - ehirsu
+  - einrst
+  - acelot
+  - adoprt
+  - acirst
+  startingRadialSetIndex: 0

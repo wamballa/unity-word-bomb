@@ -3094,6 +3094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logToConsole: 1
   audioController: {fileID: 364730492}
+  levelConfig: {fileID: 11400000, guid: 9b70a2dd0e834ff9a8321578a0f90934, type: 2}
   wordFallSpeed: 0.4
   wordFallDelay: 3.2
   letterFallSpeed: 0.6
