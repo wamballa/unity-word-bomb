@@ -6,6 +6,7 @@
 - WB-005: Make falling-word setup injectable so word selection, radial letter sets, and movement can be tested independently.
 - WB-006: Rework number bombs for the dial era: expose numbers as optional bomb tokens and clear piled letters from the bottom.
 - WB-007: Add first new level set using the refactored tuning model.
+- WB-010: Add a debug overlay with autoplay controls so test runs can progress without manual input.
 
 ## WIP
 
